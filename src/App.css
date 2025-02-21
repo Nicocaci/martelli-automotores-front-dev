@@ -7,3 +7,8 @@
 .main{
   background-color: grey;
 }
+.toast-custom {
+  font-size: 25px; /* Cambia el tamaño de la fuente */
+  padding: 20px;
+   /* Ajusta el padding */
+}

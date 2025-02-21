@@ -1,49 +1,41 @@
 .cardContainer {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-    gap: 20px; /* Espacio entre las tarjetas */
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
-    margin: 0 auto;
-    max-width: 1200px; /* Limitar el ancho máximo */
-    padding: 20px;
-  }
-  
-  .borde {
-    border: 1px solid #ccc; /* Borde suave */
-    border-radius: 8px; /* Bordes redondeados */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-    padding: 15px;
-    text-align: center;
-    background-color: #fff; /* Fondo blanco */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .borde:hover {
-    transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más marcada */
-  }
-  
-  h1 {
-    font-size: 1.25rem;
-    color: #333; /* Color de texto oscuro */
-  }
-  
-  h4 {
-    font-size: 1rem;
-    color: #555; /* Color de texto un poco más claro */
-  }
-  
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
-    background-color: #f9f9f9; /* Fondo claro */
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Las tarjetas ocuparán un mínimo de 200px y se ajustarán a las columnas disponibles */
+  gap: 20px; /* Espacio entre las filas y columnas */
+  padding: 20px;
+}
 
-  .img-card{
-    height: 300px;
-    max-width: 100%;
-  }
-  
+.borde {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega una sombra ligera para dar profundidad */
+}
+
+.img-card {
+  width: 100%;
+  max-width: 300px; /* Las imágenes tendrán un ancho máximo de 150px */
+  height: auto;
+  margin-bottom: 10px; /* Espacio debajo de la imagen */
+}
+
+h1, h4 {
+  margin: 8px 0; /* Ajuste en los márgenes */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
