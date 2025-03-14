@@ -1,9 +1,14 @@
 import React from 'react'
-import Autos from './components/autos'
 import './App.css'
 import { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Subasta from './components/Subasta';
+import NavBar from './components/navigation/NavBar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Perfil from './components/Perfil';
+import Login from './usuarios/login';
+import Signup from './usuarios/signup';
 
 
 
@@ -24,10 +29,20 @@ const App = () => {
     });
   }, []);
   return (
+    <BrowserRouter>
     <div className='main'>
-    <Autos/>
+    <NavBar/>
     <ToastContainer />
     </div>
+    <Routes>
+      <Route exact path="/" element={<Login/>}/>
+      <Route exact path="/login" element={<Login/>}/>
+      <Route exact path="/signup" element={<Signup/>}/>
+      <Route exact path="/perfil" element={<Perfil/>}/>
+      <Route exact path="/subasta" element={<Subasta/>}/>
+      <Route exact path="/logout" />
+    </Routes>
+    </BrowserRouter>
   )
 }
 

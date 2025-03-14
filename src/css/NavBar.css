@@ -1,0 +1,63 @@
+.navBar {
+    background-color: #1f2024;
+    border: 5px solid red;
+    height: 20vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+}
+
+.menu-container {
+    position: relative;
+}
+
+.menu-button {
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #333;
+    color: white;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    top: 0px;
+    right: 10px;
+    z-index: 1000;
+  }
+  
+  .menu-dropdown {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #1f2024;
+}
+
+.menu-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.menu-item:hover {
+    background: #f0f0f0;
+}

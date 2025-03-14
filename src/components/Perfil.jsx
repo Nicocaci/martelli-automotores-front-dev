@@ -1,0 +1,92 @@
+import React, { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+
+const Perfil = () => {
+  const [usuario, setUsuario] = useState(null);
+  const [dataUs, setDataUs] = useState(null);
+
+  useEffect(() => {
+    const token = Cookies.get("acces_token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUsuario(decoded._id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (usuario) {
+      const fetchUsuario = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/usuarios/${usuario}`);
+          setDataUs(response.data); // Aquí guardamos todo el objeto de usuario
+        } catch (error) {
+          console.error("Error al obtener los usuarios:", error);
+        }
+      };
+      fetchUsuario();
+    }
+  }, [usuario]);
+
+  return (
+    <div>
+      <h1>Perfil</h1>
+      {dataUs ? (
+        <div>
+          <p>Nombre: {dataUs.nombre}</p>
+          <p>Apellido: {dataUs.apellido}</p>
+          <p>Email: {dataUs.email}</p>
+          <p>Dirección: {dataUs.direccion}</p>
+          <p>Teléfono: {dataUs.telefono}</p>
+
+          {/* Aquí renderizamos las ofertas hechas en tarjetas */}
+          {dataUs.ofertasHechas && dataUs.ofertasHechas.length > 0 ? (
+            <div className="ofertas-cards">
+              {dataUs.ofertasHechas.map((oferta, index) => (
+                <div className="card" key={index} style={cardStyle} >
+                  <img src={oferta.subasta.autos.img} alt={oferta.subasta.autos.nombre} style={imageStyle}  />
+                  <div className="card-content" style={contentStyle}>
+                    <h3>{oferta.subasta.autos.nombre}</h3>
+                    <p>Modelo: {oferta.subasta.autos.modelo}</p>
+                    <p>Motor: {oferta.subasta.autos.motor}</p>
+                    <p>Ubicación: {oferta.subasta.autos.ubicacion}</p>
+                    <p><strong>Monto de oferta: ${oferta.monto}</strong></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No se han realizado ofertas.</p>
+          )}
+        </div>
+      ) : (
+        <p>Cargando...</p>
+      )}
+    </div>
+  );
+};
+
+const cardStyle = {
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  width: '250px',
+  margin: '10px',
+  padding: '15px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  display: 'inline-block',
+  textAlign: 'center',
+  backgroundColor: '#fff',
+};
+
+const imageStyle = {
+  width: '100%',
+  height: 'auto',
+  borderRadius: '8px',
+};
+
+const contentStyle = {
+  marginTop: '10px',
+};
+
+export default Perfil;

@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
-const PriceInput = () => {
+const PriceInput = ({ subastaId }) => {
   const [price, setPrice] = useState(0); // Estado inicial del precio
+  const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState(null); // Estado para almacenar el userId
+
+  useEffect(() => {
+    // Obtener el token de la cookie
+    const token = Cookies.get("acces_token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUserId(decoded._id); // Seteamos el userId
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
+    }
+  }, []); // Solo se ejecuta una vez al cargar el componente
 
   const handleIncrease = () => {
     setPrice((prevPrice) => prevPrice + 10000); // Incrementa en 10,000
@@ -15,6 +32,35 @@ const PriceInput = () => {
     const newValue = e.target.value;
     if (!isNaN(newValue)) {
       setPrice(Number(newValue)); // Actualiza el precio directamente desde el input
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!userId) {
+      setMessage("Error: Usuario no autenticado.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/subasta/${subastaId}/ofertadores`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          monto: price,
+          usuario: userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en la respuesta del servidor");
+      }
+
+      setMessage("Oferta enviada con éxito.");
+    } catch (error) {
+      console.error("Error al ofertar:", error);
+      setMessage("Error al enviar la oferta.");
     }
   };
 
@@ -46,8 +92,20 @@ const PriceInput = () => {
         </button>
       </div>
       <p className="text-lg">
-        Precio actual: <span className="font-bold text-blue-600">${price}</span>
+        Oferta hecha en: <span className="font-bold text-blue-600">${price}</span>
       </p>
+      <div className="flex gap-4">
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+        >
+          Ofertar Subasta
+        </button>
+        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+          Ver detalle
+        </button>
+      </div>
+      {message && <p className="mt-2 text-sm text-gray-700">{message}</p>}
     </div>
   );
 };
