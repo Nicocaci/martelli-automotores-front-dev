@@ -1,9 +1,10 @@
 
   import React from 'react';
-  import '../App.css'
+  import '../css/Login.css';
   import { useState, useEffect } from 'react';
   import { useNavigate } from 'react-router-dom';
   import Cookies from 'js-cookie';
+  import axios from 'axios';
 
   const Login = () => {
       const [email,setEmail] = useState("");
@@ -15,7 +16,6 @@
 
       useEffect(()=>{
         const token = Cookies.get("acces_token");
-        console.log("Token desde cookie:", token);
         if(token){
           navigate('/subasta')
         }
@@ -28,23 +28,22 @@
           return;
         }
         try {
-          const response = await fetch('http://localhost:8080/api/usuarios/login', {
-            method: 'POST',
-            headers:{'Content-Type': 'application/json'},
-            body: JSON.stringify({ email,password}),
-            credentials: "include"
-          });
-
-          const data = await response.json();
-          if(!response.ok){
-            throw new Error(data.message);
-          }
+          const response = await axios.post(
+            "https://martelli-automotes-back-production.up.railway.app/api/usuarios/login",
+            { email, password },
+            { headers: { "Content-Type": "application/json" }, withCredentials: true }
+          );
+          const data = response.data;
 
           alert('Inicio de sesion exitoso');
           navigate('/subasta');
         } catch (error) {
-          setError(error.message);
-        }
+          if (error.response) {
+            setError(error.response.data.message || "Error en el inicio de sesión");
+          } else {
+            setError("Error de conexión con el servidor");
+          }
+        };
       };
 
 

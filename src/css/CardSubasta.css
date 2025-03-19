@@ -1,0 +1,49 @@
+.cardContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Las tarjetas ocuparán un mínimo de 200px y se ajustarán a las columnas disponibles */
+    gap: 20px;
+    /* Espacio entre las filas y columnas */
+    padding: 20px;
+}
+
+.borde {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Agrega una sombra ligera para dar profundidad */
+}
+
+.img-card {
+    width: 100%;
+    max-width: 300px;
+    /* Las imágenes tendrán un ancho máximo de 150px */
+    height: auto;
+    margin-bottom: 10px;
+    /* Espacio debajo de la imagen */
+}
+
+h1,
+h4 {
+    margin: 8px 0;
+    /* Ajuste en los márgenes */
+    font-size: 14px;
+    /* Tamaño de fuente más pequeño */
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

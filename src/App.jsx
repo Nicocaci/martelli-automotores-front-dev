@@ -7,8 +7,9 @@ import Subasta from './components/Subasta';
 import NavBar from './components/navigation/NavBar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Perfil from './components/Perfil';
-import Login from './usuarios/login';
-import Signup from './usuarios/signup';
+import Login from './usuarios/Login';
+import Signup from './usuarios/Signup';
+import PerfilAdmin from './components/PerfilAdmin';
 
 
 
@@ -39,6 +40,7 @@ const App = () => {
       <Route exact path="/login" element={<Login/>}/>
       <Route exact path="/signup" element={<Signup/>}/>
       <Route exact path="/perfil" element={<Perfil/>}/>
+      <Route exact path="/perfilAdmin" element={<PerfilAdmin/>}/>
       <Route exact path="/subasta" element={<Subasta/>}/>
       <Route exact path="/logout" />
     </Routes>

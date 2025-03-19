@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import '../App.css';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const Signup = () => {
   const [nombre, setNombre] = useState("");
@@ -11,38 +12,43 @@ const Signup = () => {
   const [direccion, setDireccion] = useState("");
   const navigate = useNavigate();
 
+        useEffect(()=>{
+          const token = Cookies.get("acces_token"); 
+          if(token){
+            navigate('/login')
+          }
+        },[navigate]);
+
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(nombre, apellido, telefono, email, password, direccion);
-  
+
     try {
-      const response = await fetch("http://localhost:8080/api/usuarios/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, apellido, telefono, email, password, direccion }),
-        credentials: "include",
-      });
-  
-      if (response.ok) {
-        console.log("Registro exitoso");
+      
+      const response = await axios.post(
+        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
+        { nombre, apellido, telefono, email, password, direccion },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
+      );
 
-        setNombre("");
-        setApellido("");
-        setTelefono("");
-        setEmail("");
-        setPassword("");
-        setDireccion("");
+      console.log("Registro exitoso");
+      setNombre("");
+      setApellido("");
+      setTelefono("");
+      setEmail("");
+      setPassword("");
+      setDireccion("");
 
-        navigate("/login");
-
-      }else {
-        console.error("Error en el registro");
-      }
+      navigate("/login");
     } catch (error) {
-      console.error("Error en la solicitud:", error);
+      if (error.response) {
+        console.error("Error en el registro:", error.response.data.message || "Error desconocido");
+      } else {
+        console.error("Error en la solicitud:", error.message);
+      }
     }
   }
-  
+
 
   return (
     <form className='form' onSubmit={handleSubmit}>

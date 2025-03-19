@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const PriceInput = ({ subastaId }) => {
   const [price, setPrice] = useState(0); // Estado inicial del precio
@@ -40,23 +41,21 @@ const PriceInput = ({ subastaId }) => {
       setMessage("Error: Usuario no autenticado.");
       return;
     }
-
+  
     try {
-      const response = await fetch(`http://localhost:8080/api/subasta/${subastaId}/ofertadores`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.put(
+        `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
+        {
           monto: price,
           usuario: userId,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error en la respuesta del servidor");
-      }
-
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
       setMessage("Oferta enviada con éxito.");
     } catch (error) {
       console.error("Error al ofertar:", error);
