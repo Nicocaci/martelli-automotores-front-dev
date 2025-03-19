@@ -49,7 +49,11 @@ const Subasta = () => {
     return (
         <div className='cardContainer'>
             {subasta?.length > 0 ? (
-                subasta.map(sub => (
+                subasta.map(sub => {
+                    const maxOferta = sub.ofertadores.length > 0
+                        ? Math.max(...sub.ofertadores.map(o => o.monto))
+                        : sub.precioInicial;
+
                     <div key={sub.autos?.id || Math.random()} className='borde'>
                         <h1 className='text-xl font-bold'>{sub.autos?.nombre}</h1>
                         <img src={sub.autos?.img} alt={sub.autos?.nombre} className='img-card' />
@@ -57,10 +61,11 @@ const Subasta = () => {
                         <h4>{sub.autos?.modelo}</h4>
                         <h4>{sub.autos?.ubicacion}</h4>
                         <h4>Precio inicial en ${sub.precioInicial}</h4>
+                        <h4>Subasta Mas Alta en: ${maxOferta}</h4>
                         <Cronometro subastaId={sub._id} />
                         <PriceInput subastaId={sub._id} />
                     </div>
-                ))
+                })
             ) : (
                 <p>No hay autos disponibles.</p>
             )}

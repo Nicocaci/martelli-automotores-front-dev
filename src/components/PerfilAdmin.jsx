@@ -127,7 +127,7 @@ const PerfilAdmin = () => {
                                     <h4>{sub.autos?.motor}</h4>
                                     <h4>{sub.autos?.modelo}</h4>
                                     <h4>{sub.autos?.ubicacion}</h4>
-                                    <h4>Precio Inicial culo en ${sub.precioInicial}</h4>
+                                    <h4>Precio Inicial en ${sub.precioInicial}</h4>
                                     <h4>Subasta más alta en: ${maxOferta}</h4>
                                     <Cronometro subastaId={sub._id} />
                                     <button>Detalles de Subastadores</button>
