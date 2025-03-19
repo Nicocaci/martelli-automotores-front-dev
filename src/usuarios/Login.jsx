@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -57,6 +58,9 @@ const Login = () => {
       <label htmlFor="">Contraseña:</label>
       <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
       <button type='submit'>Iniciar sesion</button>
+      <Link to="/signup">
+      <button type="button">Registrarse</button>
+    </Link>
     </form>
   )
 }
