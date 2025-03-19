@@ -113,25 +113,32 @@ const PerfilAdmin = () => {
             </form>
             <div>
                 <h1>ELIMINAR SUBASTA</h1>
-            <div className='cardContainer'>
-                {subastas?.length > 0 ? (
-                    subastas.map(sub => (
-                        <div key={sub.autos?.id || Math.random()} className='borde'>
-                            <h1>{subastas.autos?.nombre}</h1>
-                            <img src={sub.autos?.img} alt={sub.autos?.nombre} className='img-card' />
-                            <h4>{sub.autos?.motor}</h4>
-                            <h4>{sub.autos?.modelo}</h4>
-                            <h4>{sub.autos?.ubicacion}</h4>
-                            <h4>Precio Inicial en ${sub.precioInicial}</h4>
-                            <Cronometro subastaId={sub._id} />
-                            <button>Detalles de Subastadores</button>
-                            <button onClick={() => handleDelete(sub._id)}>Eliminar Subasta</button>
-                        </div>
-                    ))
-                ) : (
-                    <p>No hay autos disponibles.</p>
-                )}
-            </div>
+                <div className='cardContainer'>
+                    {subastas?.length > 0 ? (
+                        subastas.map(sub => {
+                            const maxOferta = sub.ofertadores.length > 0
+                                ? Math.max(...sub.ofertadores.map(o => o.monto))
+                                : sub.precioInicial; // Si no hay ofertas, mostrar precio inicial
+
+                            return (
+                                <div key={sub._id} className='borde'>
+                                    <h1>{sub.autos?.nombre}</h1>
+                                    <img src={sub.autos?.img} alt={sub.autos?.nombre} className='img-card' />
+                                    <h4>{sub.autos?.motor}</h4>
+                                    <h4>{sub.autos?.modelo}</h4>
+                                    <h4>{sub.autos?.ubicacion}</h4>
+                                    <h4>Precio Inicial en ${sub.precioInicial}</h4>
+                                    <h4>Subasta más alta en: ${maxOferta}</h4>
+                                    <Cronometro subastaId={sub._id} />
+                                    <button>Detalles de Subastadores</button>
+                                    <button onClick={() => handleDelete(sub._id)}>Eliminar Subasta</button>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p>No hay autos disponibles.</p>
+                    )}
+                </div>
             </div>
         </div>
     )
