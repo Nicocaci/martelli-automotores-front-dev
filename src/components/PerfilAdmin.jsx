@@ -35,7 +35,7 @@ const PerfilAdmin = () => {
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/subasta");
+                const response = await axios.get("https://martelli-automotores-back-dev-production.up.railway.app/api/subasta");
 
                 if (Array.isArray(response.data)) {
                     setSubastas(response.data);
@@ -68,7 +68,7 @@ const PerfilAdmin = () => {
         e.preventDefault();
         const auctionData = { ...formData, precioInicial: Number(formData.precioInicial), ofertadores: [] };
         try {
-            await axios.post("http://localhost:3000/api/subasta", auctionData, {
+            await axios.post("https://martelli-automotores-back-dev-production.up.railway.app/api/subasta", auctionData, {
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -87,7 +87,7 @@ const PerfilAdmin = () => {
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta subasta?")) {
             try {
-                await axios.delete(`http://localhost:3000/api/subasta/${id}`);
+                await axios.delete(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${id}`);
                 alert("Subasta eliminada exitosamente");
                 setSubastas(subastas.filter(sub => sub._id !== id));
             } catch (error) {

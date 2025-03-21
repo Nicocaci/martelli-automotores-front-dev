@@ -17,7 +17,7 @@ const Subasta = () => {
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/subasta");
+                const response = await axios.get("https://martelli-automotores-back-dev-production.up.railway.app/api/subasta");
 
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
