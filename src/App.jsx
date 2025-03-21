@@ -34,7 +34,7 @@ const App = () => {
     <div className='main'>
     <NavBar/>
     <ToastContainer />
-    </div>
+  
     <Routes>
       <Route exact path="/" element={<Login/>}/>
       <Route exact path="/login" element={<Login/>}/>
@@ -44,7 +44,9 @@ const App = () => {
       <Route exact path="/subasta" element={<Subasta/>}/>
       <Route exact path="/logout" />
     </Routes>
+    </div>
     </BrowserRouter>
+    
   )
 }
 

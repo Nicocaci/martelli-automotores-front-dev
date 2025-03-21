@@ -6,9 +6,6 @@ import '../css/FormSubasta.css';
 import Cronometro from './navigation/Cronometro.jsx';
 import '../css/CardSubasta.css';
 
-
-
-
 const PerfilAdmin = () => {
     const [formData, setFormData] = useState({
         autos: {
@@ -24,6 +21,8 @@ const PerfilAdmin = () => {
     const [subastas, setSubastas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [ofertadores, setOfertadores] = useState([]); // Estado para almacenar ofertadores
+    const [subastaSeleccionada, setSubastaSeleccionada] = useState(null); // Estado para manejar la subasta seleccionada
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,7 +35,7 @@ const PerfilAdmin = () => {
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
-                const response = await axios.get("https://martelli-automotes-back-production.up.railway.app/api/subasta");
+                const response = await axios.get("http://localhost:3000/api/subasta");
 
                 if (Array.isArray(response.data)) {
                     setSubastas(response.data);
@@ -69,7 +68,7 @@ const PerfilAdmin = () => {
         e.preventDefault();
         const auctionData = { ...formData, precioInicial: Number(formData.precioInicial), ofertadores: [] };
         try {
-            await axios.post("https://martelli-automotes-back-production.up.railway.app/api/subasta", auctionData, {
+            await axios.post("http://localhost:3000/api/subasta", auctionData, {
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -88,7 +87,7 @@ const PerfilAdmin = () => {
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta subasta?")) {
             try {
-                await axios.delete(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`);
+                await axios.delete(`http://localhost:3000/api/subasta/${id}`);
                 alert("Subasta eliminada exitosamente");
                 setSubastas(subastas.filter(sub => sub._id !== id));
             } catch (error) {
@@ -96,6 +95,11 @@ const PerfilAdmin = () => {
                 alert("Hubo un problema al eliminar la subasta");
             }
         }
+    };
+
+    const handleShowOfertadores = (subasta) => {
+        setSubastaSeleccionada(subasta);
+        setOfertadores(subasta.ofertadores); // Mostrar los ofertadores de la subasta seleccionada
     };
 
     return (
@@ -118,7 +122,7 @@ const PerfilAdmin = () => {
                         subastas.map(sub => {
                             const maxOferta = sub.ofertadores.length > 0
                                 ? Math.max(...sub.ofertadores.map(o => o.monto))
-                                : sub.precioInicial; // Si no hay ofertas, mostrar precio inicial
+                                : sub.precioInicial;
 
                             return (
                                 <div key={sub._id} className='borde'>
@@ -130,7 +134,7 @@ const PerfilAdmin = () => {
                                     <h4>Precio Inicial en ${sub.precioInicial}</h4>
                                     <h4>Subasta más alta en: ${maxOferta}</h4>
                                     <Cronometro subastaId={sub._id} />
-                                    <button>Detalles de Subastadores</button>
+                                    <button onClick={() => handleShowOfertadores(sub)}>Detalles de Subastadores</button>
                                     <button onClick={() => handleDelete(sub._id)}>Eliminar Subasta</button>
                                 </div>
                             );
@@ -140,8 +144,32 @@ const PerfilAdmin = () => {
                     )}
                 </div>
             </div>
+
+            {/* Sección para mostrar los ofertadores */}
+            {subastaSeleccionada && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Ofertadores para {subastaSeleccionada.autos.nombre}</h2>
+                        {ofertadores.length > 0 ? (
+                            <ul>
+                                {/* Ordenamos los ofertadores de mayor a menor por monto */}
+                                {ofertadores
+                                    .sort((a, b) => b.monto - a.monto) // Ordenar de mayor a menor
+                                    .map((ofertador, index) => (
+                                        <li key={index}>
+                                            <strong>{ofertador.usuario.agencia}</strong> - ${ofertador.monto}
+                                        </li>
+                                    ))}
+                            </ul>
+                        ) : (
+                            <p>No hay ofertadores en esta subasta.</p>
+                        )}
+                        <button onClick={() => setSubastaSeleccionada(null)}>Cerrar</button>
+                    </div>
+                </div>
+            )}
         </div>
-    )
+    );
 }
 
-export default PerfilAdmin
+export default PerfilAdmin;

@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../css/NavBar.css'
-import logo from '../../assets/logo.png'
+import logo from '/logo.svg'
 import HamburgerMenu from './HamburgerMenu'
 
 

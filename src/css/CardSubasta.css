@@ -47,3 +47,67 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.modal-content h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    color: #333;
+}
+
+.modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.modal-content li {
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+}
+
+.modal-content li strong {
+    color: #007bff; /* Color azul para destacar el nombre */
+}
+
+.modal-content button {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.modal-content button:hover {
+    background: #cc0000;
+}

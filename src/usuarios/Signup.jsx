@@ -4,36 +4,36 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const Signup = () => {
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
+  const [agencia, setAgencia] = useState("");
+  const [dni, setDni] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [direccion, setDireccion] = useState("");
   const navigate = useNavigate();
 
-        useEffect(()=>{
-          const token = Cookies.get("acces_token"); 
-          if(token){
-            navigate('/login')
-          }
-        },[navigate]);
+        // useEffect(()=>{
+        //   const token = Cookies.get("acces_token"); 
+        //   if(token){
+        //     navigate('/login')
+        //   }
+        // },[navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(nombre, apellido, telefono, email, password, direccion);
+    console.log(agencia, dni, telefono, email, password, direccion);
 
     try {
       
       const response = await axios.post(
-        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
-        { nombre, apellido, telefono, email, password, direccion },
+        "http://localhost:3000/api/usuarios/register",
+        { agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
       console.log("Registro exitoso");
-      setNombre("");
-      setApellido("");
+      setAgencia("");
+      setDni("");
       setTelefono("");
       setEmail("");
       setPassword("");
@@ -53,10 +53,10 @@ const Signup = () => {
   return (
     <form className='form' onSubmit={handleSubmit}>
       <h1>Registro de Usuario</h1>
-      <label>Nombre:</label>
-      <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-      <label>Apellido:</label>
-      <input type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
+      <label>Nombre de Agencia:</label>
+      <input type="text" value={agencia} onChange={(e) => setAgencia(e.target.value)} required />
+      <label>Dni:</label>
+      <input type="text" value={dni} onChange={(e) => setDni(e.target.value)} required />
       <label>Telefono:</label>
       <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
       <label>Email:</label>

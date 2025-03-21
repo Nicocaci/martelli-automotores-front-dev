@@ -1,41 +1,117 @@
-.cardContainer {
+/* Contenedor principal */
+.box {
+  border: 2px solid black;
+  background-color: #E5E8E9;
+  width: 70%;
+  height: 80%;
+  margin: auto;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+/* Grid de autos */
+.contenedor {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Las tarjetas ocuparán un mínimo de 200px y se ajustarán a las columnas disponibles */
-  gap: 20px; /* Espacio entre las filas y columnas */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
   padding: 20px;
 }
 
+/* Tarjetas de autos */
 .borde {
-  border: 1px solid #ccc;
-  padding: 10px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
   text-align: center;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Agrega una sombra ligera para dar profundidad */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
 }
 
+.borde:hover {
+  transform: scale(1.05);
+}
+
+/* Imágenes */
 .img-card {
   width: 100%;
-  max-width: 300px; /* Las imágenes tendrán un ancho máximo de 150px */
   height: auto;
-  margin-bottom: 10px; /* Espacio debajo de la imagen */
+  border-radius: 8px;
 }
 
-h1, h4 {
-  margin: 8px 0; /* Ajuste en los márgenes */
-  font-size: 14px; /* Tamaño de fuente más pequeño */
-}
-
-button {
+/* Botones */
+.btn-ofertar, .btn-detalle, .btn-cerrar {
+  display: block;
+  width: 100%;
+  padding: 10px;
   margin-top: 10px;
-  padding: 8px 15px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
   border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background 0.3s ease-in-out;
 }
 
-button:hover {
+.btn-ofertar {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-ofertar:hover {
   background-color: #0056b3;
+}
+
+.btn-detalle {
+  background-color: gray;
+  color: white;
+}
+
+.btn-detalle:hover {
+  background-color: #444;
+}
+
+.btn-cerrar {
+  background-color: red;
+  color: white;
+}
+
+.btn-cerrar:hover {
+  background-color: darkred;
+}
+
+/* MODAL */
+.tu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px); /* Efecto de desenfoque */
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.wa {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Animación para la apertura del modal */
+@keyframes fadeIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

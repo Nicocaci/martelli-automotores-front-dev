@@ -10,7 +10,7 @@ const Cronometro = ({ subastaId }) => {
     useEffect(() => {
         const fetchSubasta = async () => {
             try {
-                const response = await axios.get(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}`);
+                const response = await axios.get(`http://localhost:3000/api/subasta/${subastaId}`);
                 const data = response.data;
 
                 setSubasta(data);
@@ -42,8 +42,10 @@ const Cronometro = ({ subastaId }) => {
         
         if (ahora >= fin) {
             setTiempoRestante(null);
-            setTiempoExtra(60);
-            axios.put(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/activar-tiempo-extra`);
+            if (subasta.tiempoExtraRestante === null) {
+                axios.put(`http://localhost:3000/api/subasta/${subastaId}/activar-tiempo-extra`);
+                setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
+            }
             return;
         }
 
@@ -63,22 +65,26 @@ const Cronometro = ({ subastaId }) => {
                     if (prev === 1) {
                         clearInterval(intervalo);
                         setSubastaFinalizada(true);
-                        axios.put(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`);
+                        // Finaliza la subasta después de que el tiempo extra llega a 0
+                        axios.put(`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`);
                         return null;
                     }
-                    axios.put(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`);
+                    axios.put(`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`);
                     return prev - 1;
                 });
             }, 1000);
             return () => clearInterval(intervalo);
         }
     }, [tiempoExtra, subastaId]);
-    if(tiempoExtra === 0){
-        axios.put(`https://martelli-automotes-back-production.up.railway.app/api/subasta/finalizar/${subastaId}`,{
-            finalizada : true
-        });
-        
-    }
+
+    useEffect(() => {
+        if (subastaFinalizada) {
+            axios.put(`http://localhost:3000/api/subasta/finalizar/${subastaId}`, {
+                finalizada: true
+            });
+        }
+    }, [subastaFinalizada, subastaId]);
+
     if (subastaFinalizada) {
         return <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "red" }}>¡Subasta Finalizada!</div>;
     }

@@ -4,35 +4,62 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const PriceInput = ({ subastaId }) => {
-  const [price, setPrice] = useState(0); // Estado inicial del precio
+  const [price, setPrice] = useState(0);
+  const [highestBid, setHighestBid] = useState(0);
   const [message, setMessage] = useState("");
-  const [userId, setUserId] = useState(null); // Estado para almacenar el userId
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Obtener el token de la cookie
     const token = Cookies.get("acces_token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUserId(decoded._id); // Seteamos el userId
+        setUserId(decoded._id);
       } catch (error) {
         console.error("Error al decodificar el token:", error);
       }
     }
-  }, []); // Solo se ejecuta una vez al cargar el componente
+
+    const fetchHighestBid = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/subasta/${subastaId}`
+        );
+        if (response.data) {
+          const { ofertadores, precioInicial } = response.data;
+          const maxBid = ofertadores.length > 0 
+            ? Math.max(...ofertadores.map((o) => o.monto)) 
+            : precioInicial;
+          setHighestBid(maxBid);
+          setPrice(maxBid + 10000);
+        }
+      } catch (error) {
+        console.error("Error al obtener la oferta más alta:", error);
+      }
+    };
+
+    fetchHighestBid();
+  }, [subastaId]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
   const handleIncrease = () => {
-    setPrice((prevPrice) => prevPrice + 10000); // Incrementa en 10,000
+    setPrice((prevPrice) => prevPrice + 10000);
   };
 
   const handleDecrease = () => {
-    setPrice((prevPrice) => (prevPrice >= 10000 ? prevPrice - 10000 : 0)); // Decrementa en 10,000 pero no baja de 0
+    setPrice((prevPrice) => prevPrice - 10000);
   };
 
   const handleChange = (e) => {
     const newValue = e.target.value;
-    if (!isNaN(newValue)) {
-      setPrice(Number(newValue)); // Actualiza el precio directamente desde el input
+    if (/^\d*$/.test(newValue)) { 
+      setPrice(Number(newValue));
     }
   };
 
@@ -41,22 +68,26 @@ const PriceInput = ({ subastaId }) => {
       setMessage("Error: Usuario no autenticado.");
       return;
     }
-  
+
+    if (price <  highestBid) {
+      setMessage("Error: Precio menor a la subasta más alta.");
+      return;
+    }
+
     try {
-      const response = await axios.put(
-        `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
+      await axios.put(
+        `http://localhost:3000/api/subasta/${subastaId}/ofertadores`,
         {
           monto: price,
           usuario: userId,
         },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
-  
+
       setMessage("Oferta enviada con éxito.");
+      setHighestBid(price);
     } catch (error) {
       console.error("Error al ofertar:", error);
       setMessage("Error al enviar la oferta.");
@@ -68,13 +99,11 @@ const PriceInput = ({ subastaId }) => {
       <label htmlFor="price" className="text-lg font-semibold">
         Ofertar subasta:
       </label>
+      <p className="text-lg">
+        Oferta más alta: <span className="font-bold text-red-600">${highestBid}</span>
+      </p>
       <div className="flex items-center gap-2">
-        <button
-          onClick={handleDecrease}
-          className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 focus:outline-none"
-        >
-          -
-        </button>
+        <button onClick={handleDecrease} className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 focus:outline-none">-</button>
         <input
           type="text"
           id="price"
@@ -83,26 +112,14 @@ const PriceInput = ({ subastaId }) => {
           placeholder="Escriba un precio"
           className="border-2 border-gray-300 rounded-lg p-2 w-32 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button
-          onClick={handleIncrease}
-          className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 focus:outline-none"
-        >
-          +
-        </button>
+        <button onClick={handleIncrease} className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 focus:outline-none">+</button>
       </div>
       <p className="text-lg">
         Oferta hecha en: <span className="font-bold text-blue-600">${price}</span>
       </p>
       <div className="flex gap-4">
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-        >
-          Ofertar Subasta
-        </button>
-        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-          Ver detalle
-        </button>
+        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Ofertar Subasta</button>
+        
       </div>
       {message && <p className="mt-2 text-sm text-gray-700">{message}</p>}
     </div>

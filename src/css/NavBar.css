@@ -1,7 +1,7 @@
 .navBar {
-    background-color: #1f2024;
-    border: 5px solid red;
-    height: 20vw;
+    background-color: #E5E8E9;
+    border: 5px solid rgb(5, 5, 5);
+    height: 50%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -9,8 +9,8 @@
 }
 
 .logo {
-    width: 100px;
-    height: 100px;
+    width: 300px;
+    height: 200px;
 }
 
 .menu-container {
@@ -26,7 +26,7 @@
     position: relative;
     cursor: pointer;
     top: 0px;
-    right: 10px;
+    right: 30px;
     z-index: 1000;
   }
   
@@ -34,7 +34,7 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 50%;
+    width: 40%;
     height: 100vh;
     background: white;
     box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);

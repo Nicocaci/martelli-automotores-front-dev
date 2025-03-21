@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PriceInput from './PriceInput';
-import CuentaRegresiva from './CuentaRegresiva';
-import '../css/CardSubasta.css'
 import Cronometro from './navigation/Cronometro';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import '../css/Autos.css';
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(null);
+    const [activeSubasta, setActiveSubasta] = useState(null); // Estado para el modal
+    const [loadingBid, setLoadingBid] = useState(false); // Estado para mostrar carga en oferta
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
-                const response = await axios.get("https://martelli-automotes-back-production.up.railway.app/api/subasta");
+                const response = await axios.get("http://localhost:3000/api/subasta");
 
-                // Si response.data ya es un array, lo asignamos
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
                 } else {
                     console.error("La API no devolvió un array:", response.data);
-                    setSubasta([]); // Evitamos undefined
+                    setSubasta([]);
                 }
             } catch (error) {
                 console.error("Error al obtener los autos:", error);
@@ -37,42 +37,71 @@ const Subasta = () => {
 
     useEffect(() => {
         const token = Cookies.get("acces_token");
-        console.log("Token desde cookie:", token);
         if (!token) {
-            navigate('/login')
+            navigate('/login');
         }
     }, [navigate]);
+
+    // Función para abrir/cerrar el modal
+    const toggleModal = (subasta) => {
+        setActiveSubasta(subasta);
+    };
 
     if (loading) return <p>Cargando autos...</p>;
     if (error) return <p>{error}</p>;
 
     return (
-        <div className='cardContainer'>
-            {subasta?.length > 0 ? (
-                subasta.map(sub => {
-                    const maxOferta = sub.ofertadores.length > 0
-                        ? Math.max(...sub.ofertadores.map(o => o.monto))
-                        : sub.precioInicial;
-    
-                    return ( // ← ¡Asegúrate de devolver el div aquí!
-                        <div key={sub.autos?.id || Math.random()} className='borde'>
+        <div className='box'>
+            <div className='contenedor'>
+                {subasta.length > 0 ? (
+                    subasta.map((sub) => (
+                        <div key={sub._id} className='borde'>
                             <h1 className='text-xl font-bold'>{sub.autos?.nombre}</h1>
                             <img src={sub.autos?.img} alt={sub.autos?.nombre} className='img-card' />
                             <h4>{sub.autos?.motor}</h4>
                             <h4>{sub.autos?.modelo}</h4>
                             <h4>{sub.autos?.ubicacion}</h4>
                             <h4>Precio inicial en ${sub.precioInicial}</h4>
-                            <h4>Subasta Más Alta en: ${maxOferta}</h4>
                             <Cronometro subastaId={sub._id} />
-                            <PriceInput subastaId={sub._id} />
+
+                            {/* Botón para abrir el modal */}
+                            <button 
+                                className="btn-ofertar"
+                                onClick={() => toggleModal(sub)}
+                            >
+                                Ofertar Subasta
+                            </button>
+
+                            <button className="btn-detalle">
+                                Ver detalle
+                            </button>
                         </div>
-                    );
-                })
-            ) : (
-                <p>No hay autos disponibles.</p>
+                    ))
+                ) : (
+                    <p>No hay autos disponibles.</p>
+                )}
+            </div>
+
+            {/* MODAL */}
+            {activeSubasta && (
+                <div className="tu">
+                    <div className="wa">
+                        <h2 className="text-xl font-bold">Ofertar por {activeSubasta.autos?.nombre}</h2>
+                        <h3 className="text-lg">Oferta más alta: ${activeSubasta.ofertaMaxima || activeSubasta.precioInicial}</h3>
+                        
+                        <PriceInput subastaId={activeSubasta._id} />
+
+                        <button 
+                            className="btn-cerrar"
+                            onClick={() => setActiveSubasta(null)}
+                        >
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );
-}
+};
 
 export default Subasta;
