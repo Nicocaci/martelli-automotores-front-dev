@@ -14,7 +14,7 @@ const HamburgerMenu = () => {
     const handleLogout = async () => {
         try {
             await axios.post(
-                "http://localhost:3000/api/usuarios/logout",
+              "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
                 {},
                 { withCredentials: true }
             );

@@ -9,7 +9,7 @@ import Ganador from "./Ganador";
 import { io } from "socket.io-client";
 
 // Conexión al WebSocket
-const socket = io("http://localhost:3000");
+const socket = io("https://martelli-automotes-back-production.up.railway.app");
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
@@ -23,7 +23,7 @@ const Subasta = () => {
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/subasta");
+                const response = await axios.get("https://martelli-automotes-back-production.up.railway.app/api/subasta");
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
                     fetchHighestBids(response.data); // Llamar aquí para obtener las ofertas
@@ -47,7 +47,7 @@ const Subasta = () => {
         const bids = {};
         for (const sub of subastas) {
             try {
-                const response = await axios.get(`http://localhost:3000/api/subasta/${sub._id}`);
+                const response = await axios.get(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`);
                 if (response.data) {
                     const { ofertadores, precioInicial } = response.data;
                     bids[sub._id] = ofertadores.length > 0
@@ -68,7 +68,7 @@ const Subasta = () => {
         socket.on("subastaActualizada", (data) => {
             console.log("subasta actualizada:", data);
 
-            axios.get(`http://localhost:3000/api/subasta/${data.subastaId}`)
+            axios.get(`https://martelli-automotes-back-production.up.railway.app/api/subasta/${data.subastaId}`)
                 .then((response) => {
                     const { ofertadores, precioInicial } = response.data;
                     const maxBid = ofertadores.length > 0

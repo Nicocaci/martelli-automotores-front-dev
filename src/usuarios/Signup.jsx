@@ -12,21 +12,13 @@ const Signup = () => {
   const [direccion, setDireccion] = useState("");
   const navigate = useNavigate();
 
-        // useEffect(()=>{
-        //   const token = Cookies.get("acces_token"); 
-        //   if(token){
-        //     navigate('/login')
-        //   }
-        // },[navigate]);
-
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(agencia, dni, telefono, email, password, direccion);
 
     try {
-      
       const response = await axios.post(
-        "http://localhost:3000/api/usuarios/register",
+        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
         { agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
@@ -48,7 +40,6 @@ const Signup = () => {
       }
     }
   }
-
 
   return (
     <form className='form' onSubmit={handleSubmit}>
