@@ -28,7 +28,7 @@ const Perfil = () => {
     if (usuario) {
       const fetchUsuario = async () => {
         try {
-          const response = await axios.get(`https://martelli-automotores-back-dev-production.up.railway.app/api/usuarios/${usuario}`);
+          const response = await axios.get(`http://localhost:3000/api/usuarios/${usuario}`);
           setDataUs(response.data); // Aquí guardamos todo el objeto de usuario
         } catch (error) {
           console.error("Error al obtener los usuarios:", error);
@@ -43,8 +43,8 @@ const Perfil = () => {
       <h1>Perfil</h1>
       {dataUs ? (
         <div>
-          <p>Nombre: {dataUs.nombre}</p>
-          <p>Apellido: {dataUs.apellido}</p>
+          <p>Agencia: {dataUs.agencia}</p>
+          <p>Dni: {dataUs.dni}</p>
           <p>Email: {dataUs.email}</p>
           <p>Dirección: {dataUs.direccion}</p>
           <p>Teléfono: {dataUs.telefono}</p>

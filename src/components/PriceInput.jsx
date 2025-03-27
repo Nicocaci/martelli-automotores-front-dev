@@ -23,7 +23,7 @@ const PriceInput = ({ subastaId }) => {
     const fetchHighestBid = async () => {
       try {
         const response = await axios.get(
-          `https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}`
+          `http://localhost:3000/api/subasta/${subastaId}`
         );
         if (response.data) {
           const { ofertadores, precioInicial } = response.data;
@@ -76,7 +76,7 @@ const PriceInput = ({ subastaId }) => {
 
     try {
       await axios.put(
-        `https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
+        `http://localhost:3000/api/subasta/${subastaId}/ofertadores`,
         {
           monto: price,
           usuario: userId,

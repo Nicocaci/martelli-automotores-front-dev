@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
+
+// Aquí inicializas el socket
+const socket = io("http://localhost:3000");
 
 const Cronometro = ({ subastaId }) => {
     const [subasta, setSubasta] = useState(null);
@@ -8,14 +12,14 @@ const Cronometro = ({ subastaId }) => {
     const [subastaFinalizada, setSubastaFinalizada] = useState(false);
 
     useEffect(() => {
+        // Obtener los datos de la subasta cuando se carga el componente
         const fetchSubasta = async () => {
             try {
-                const response = await axios.get(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}`);
+                const response = await axios.get(`http://localhost:3000/api/subasta/${subastaId}`);
                 const data = response.data;
-
                 setSubasta(data);
 
-                if (response.data.finalizada) {
+                if (data.finalizada) {
                     setSubastaFinalizada(true);
                     return;
                 }
@@ -39,11 +43,11 @@ const Cronometro = ({ subastaId }) => {
     const calcularTiempoRestante = (subasta) => {
         const ahora = new Date().getTime();
         const fin = new Date(subasta.fechaFin).getTime();
-        
+
         if (ahora >= fin) {
             setTiempoRestante(null);
             if (subasta.tiempoExtraRestante === null) {
-                axios.put(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}/activar-tiempo-extra`);
+                axios.put(`http://localhost:3000/api/subasta/${subastaId}/activar-tiempo-extra`);
                 setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
             }
             return;
@@ -66,10 +70,10 @@ const Cronometro = ({ subastaId }) => {
                         clearInterval(intervalo);
                         setSubastaFinalizada(true);
                         // Finaliza la subasta después de que el tiempo extra llega a 0
-                        axios.put(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`);
+                        axios.put(`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`);
                         return null;
                     }
-                    axios.put(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`);
+                    axios.put(`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`);
                     return prev - 1;
                 });
             }, 1000);
@@ -79,11 +83,27 @@ const Cronometro = ({ subastaId }) => {
 
     useEffect(() => {
         if (subastaFinalizada) {
-            axios.put(`https://martelli-automotores-back-dev-production.up.railway.app/api/subasta/finalizar/${subastaId}`, {
+            axios.put(`http://localhost:3000/api/subasta/finalizar/${subastaId}`, {
                 finalizada: true
             });
         }
     }, [subastaFinalizada, subastaId]);
+
+    // Aquí es donde manejas las actualizaciones en tiempo real
+    useEffect(() => {
+        socket.on("subastaActualizada", (data) => {
+            // Si el servidor envía una actualización, actualizamos el tiempo extra
+            setTiempoExtra(data.tiempoExtraRestante);
+            if (data.finalizada) {
+                setSubastaFinalizada(true);
+            }
+        });
+
+        return () => {
+            // Limpieza al desmontar el componente
+            socket.off("subastaActualizada");
+        };
+    }, []);
 
     if (subastaFinalizada) {
         return <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "red" }}>¡Subasta Finalizada!</div>;
