@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import io from 'socket.io-client';
-
-// Aquí inicializas el socket
-const socket = io("https://martelli-automotes-back-production.up.railway.app")
+import socket from "../../utils/Socket.js";
 
 const Cronometro = ({ subastaId }) => {
     const [subasta, setSubasta] = useState(null);
@@ -91,19 +88,16 @@ const Cronometro = ({ subastaId }) => {
 
     // Aquí es donde manejas las actualizaciones en tiempo real
     useEffect(() => {
-        socket.on("subastaActualizada", (data) => {
-            // Si el servidor envía una actualización, actualizamos el tiempo extra
-            setTiempoExtra(data.tiempoExtraRestante);
-            if (data.finalizada) {
+        socket.on("subastaFinalizada", (data) => {
+            if (data.subastaId === subastaId) {
                 setSubastaFinalizada(true);
             }
         });
-
+    
         return () => {
-            // Limpieza al desmontar el componente
-            socket.off("subastaActualizada");
+            socket.off("subastaFinalizada");
         };
-    }, []);
+    }, [subastaId]);
 
     if (subastaFinalizada) {
         return <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "red" }}>¡Subasta Finalizada!</div>;

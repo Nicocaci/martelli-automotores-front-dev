@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-
-const socket = io("https://martelli-automotes-back-production.up.railway.app")
+import socket from "../utils/Socket.js";
 
 const Ganador = ({ subastaId }) => {
     const [ganador, setGanador] = useState(null);

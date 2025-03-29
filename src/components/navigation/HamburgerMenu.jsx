@@ -14,7 +14,7 @@ const HamburgerMenu = () => {
     const handleLogout = async () => {
         try {
             await axios.post(
-              "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
+            "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
                 {},
                 { withCredentials: true }
             );
@@ -71,7 +71,7 @@ const HamburgerMenu = () => {
                         )}
 
                         <li className="menu-item"><Link to="/subasta">Inicio</Link></li>
-                        <li className="menu-item"><Link to={rol === "admin" ? "/perfilAdmin" : "/perfil"}>Perfil</Link></li>
+                        <li className="menu-item"><Link to={ rol === "admin" ? "/perfilAdmin" : "/perfil"}>Perfil</Link></li>
                         <li className="menu-item"><button onClick={handleLogout}>Cerrar Sesión</button></li>
                     </ul>
                 </motion.div>

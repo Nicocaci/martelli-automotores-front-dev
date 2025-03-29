@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import '../css/FormSubasta.css';
 import Cronometro from './navigation/Cronometro.jsx';
 import '../css/CardSubasta.css';
+import Ganador from './Ganador.jsx';
 
 const PerfilAdmin = () => {
     const [formData, setFormData] = useState({
@@ -135,6 +136,7 @@ const PerfilAdmin = () => {
                                     <h4>Precio Inicial en ${sub.precioInicial}</h4>
                                     <h4>Subasta más alta en: ${maxOferta}</h4>
                                     <Cronometro subastaId={sub._id} />
+                                    <Ganador subastaId={sub._id} />
                                     <button onClick={() => handleShowOfertadores(sub)}>Detalles de Subastadores</button>
                                     <button onClick={() => handleDelete(sub._id)}>Eliminar Subasta</button>
                                 </div>

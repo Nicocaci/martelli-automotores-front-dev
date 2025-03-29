@@ -5,11 +5,8 @@ import Cronometro from "./navigation/Cronometro";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "../css/Autos.css";
-import Ganador from "./Ganador";
-import { io } from "socket.io-client";
-
-// Conexión al WebSocket
-const socket = io("https://martelli-automotes-back-production.up.railway.app");
+import socket from "../utils/Socket.js";
+import Ganador from "./Ganador.jsx";
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
@@ -121,8 +118,7 @@ const Subasta = () => {
                             <h4>{sub.autos?.ubicacion}</h4>
                             <h4>Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4>
                             <Cronometro subastaId={sub._id} />
-                            <Ganador subastaId={sub._id} />
-
+                            {/* <Ganador subastaId={sub._id} /> */}
                             <button className="btn-ofertar" onClick={() => toggleModal(sub)}>
                                 Ofertar Subasta
                             </button>
