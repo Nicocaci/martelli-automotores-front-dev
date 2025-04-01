@@ -40,8 +40,8 @@ const Subasta = () => {
         const fetchSubastas = async () => {
             try {
                 const response = await axios.get(
-                    // "https://martelli-automotes-back-production.up.railway.app/api/subasta"
-                    "http://localhost:3000/api/subasta"
+                    "https://martelli-automotes-back-production.up.railway.app/api/subasta"
+                    //"http://localhost:3000/api/subasta"
                 );
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
