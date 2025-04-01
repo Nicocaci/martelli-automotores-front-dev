@@ -38,8 +38,8 @@ const NavBar = () => {
     const handleLogout = async () => {
         try {
             await axios.post(
-                //"https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout"
-                "http://localhost:3000/api/usuarios/logout",
+                "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
+                //"http://localhost:3000/api/usuarios/logout",
                 {},
                 { withCredentials: true }
             );
