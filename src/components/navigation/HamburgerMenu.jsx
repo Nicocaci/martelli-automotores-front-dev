@@ -15,6 +15,7 @@ const HamburgerMenu = () => {
         try {
             await axios.post(
             "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
+            //"http://localhost:3000/api/usuarios/logout",
                 {},
                 { withCredentials: true }
             );
@@ -40,10 +41,6 @@ const HamburgerMenu = () => {
 
         checkToken();
 
-        // Verificar cada 2 segundos si el token cambia (opcional)
-        const interval = setInterval(checkToken, 2000);
-        
-        return () => clearInterval(interval); // Limpiar intervalo cuando el componente se desmonta
     }, []);
 
     return (

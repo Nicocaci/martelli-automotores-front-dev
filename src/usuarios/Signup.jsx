@@ -18,7 +18,9 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
+        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register"
+        //"http://localhost:3000/api/usuarios/register"
+        ,
         { agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );

@@ -16,7 +16,7 @@ const NavBar = () => {
             if (token) {
                 try {
                     const decoded = jwtDecode(token);
-                    console.log("Token decodificado:", decoded);
+                    //console.log("Token decodificado:", decoded);
                     setRol(decoded.rol);
                 } catch (error) {
                     console.error("Error al decodificar el token:", error);
@@ -28,18 +28,23 @@ const NavBar = () => {
         };
     
         checkToken();
+                // Verificar cada 2 segundos si el token cambia (opcional)
+                const interval = setInterval(checkToken,2000);
+        
+                return () => clearInterval(interval); // Limpiar intervalo cuando el componente se desmonta
     }, []);
+    
     
     const handleLogout = async () => {
         try {
             await axios.post(
-                "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
+                //"https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout"
+                "http://localhost:3000/api/usuarios/logout",
                 {},
                 { withCredentials: true }
             );
-
             alert("Sesión cerrada con éxito");
-            document.cookie = "connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+            localStorage.removeItem("info");
             window.location.href = "/login";
         } catch (error) {
             console.error("Error al cerrar sesión:", error);

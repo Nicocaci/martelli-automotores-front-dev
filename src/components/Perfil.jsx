@@ -28,7 +28,10 @@ const Perfil = () => {
     if (usuario) {
       const fetchUsuario = async () => {
         try {
-          const response = await axios.get(`https://martelli-automotes-back-production.up.railway.app/api/usuarios/${usuario}`);
+          const response = await axios.get(
+            `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${usuario}`
+            //`http://localhost:3000/api/usuarios/${usuario}`
+          );
           setDataUs(response.data); // Aquí guardamos todo el objeto de usuario
         } catch (error) {
           console.error("Error al obtener los usuarios:", error);

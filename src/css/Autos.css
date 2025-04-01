@@ -25,10 +25,25 @@
   text-align: center;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease-in-out;
+  border: 2px solid black;
 }
 
 .borde:hover {
   transform: scale(1.05);
+}
+
+.titulo{
+  font-family: "Markazi Text", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: xx-large;
+}
+
+.font-precio{
+  font-family: "Alumni Sans Pinstripe", sans-serif;
+  font-style: normal;
+  font-size: x-large  ;
 }
 
 /* Imágenes */
@@ -38,7 +53,27 @@
   border-radius: 8px;
 }
 
+.sub-fin{
+  font-size: 1.5rem;
+  color: red;
+  font-family: "Gruppo", sans-serif;
+  font-weight: bold;
+  font-style: normal;
+}
+
 /* Botones */
+.input-price{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.boton-mas{
+  width: 30px;
+  height: 30px;
+}
+
+
 .btn-ofertar, .btn-detalle, .btn-cerrar {
   display: block;
   width: 100%;
@@ -117,5 +152,9 @@
 }
 
 @media(max-width:480px) {
+  .contenedor{
+    display: grid;
+    grid-template-columns: auto;
+  }
 
 }
