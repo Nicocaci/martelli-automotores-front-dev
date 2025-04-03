@@ -67,8 +67,8 @@ const Subasta = () => {
         for (const sub of subastas) {
             try {
                 const response = await axios.get(
-                    //`https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`
-                    `http://localhost:3000/api/subasta/${sub._id}`
+                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`
+                    //`http://localhost:3000/api/subasta/${sub._id}`
                 );
                 if (response.data) {
                     const { ofertadores, precioInicial } = response.data;
