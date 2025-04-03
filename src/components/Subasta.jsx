@@ -20,6 +20,9 @@ const Subasta = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const cartel = localStorage.getItem("cartel");
+
+        if(!cartel){
         // Mostrar el mensaje de alerta con toast
         toast.info("Bienvenido a AutoAPP\n\n" +
             "• La oferta ganadora deberá ser abonada dentro de los 7 días del cierre de la subasta.\n\n" +
@@ -27,18 +30,20 @@ const Subasta = () => {
             "• Al vender el rodado, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.\n\n" +
             "• Si el vehículo no es vendido dentro de los noventa días subastado, se procederá a transferir el mismo al ganador de la subasta.", {
             position: "top-center", // Puedes cambiar la posición
-            autoClose: 3000, // Duración en milisegundos
-            hideProgressBar: true, // Ocultar barra de progreso
+            autoClose: 100000, // Duración en milisegundos
+            hideProgressBar: false, // Ocultar barra de progreso
             closeOnClick: true,
             className: "toast-custom"  // Cerrar al hacer click
         });
+        localStorage.setItem("cartel", "true");
+        }
     }, []);
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
                 const response = await axios.get(
-                    "https://martelli-automotes-back-production.up.railway.app/api/subasta"
-                    //"http://localhost:3000/api/subasta"
+                    //"https://martelli-automotes-back-production.up.railway.app/api/subasta"
+                    "http://localhost:3000/api/subasta"
                 );
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
@@ -62,8 +67,8 @@ const Subasta = () => {
         for (const sub of subastas) {
             try {
                 const response = await axios.get(
-                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`
-                    //`http://localhost:3000/api/subasta/${sub._id}`
+                    //`https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`
+                    `http://localhost:3000/api/subasta/${sub._id}`
                 );
                 if (response.data) {
                     const { ofertadores, precioInicial } = response.data;
@@ -164,7 +169,6 @@ const Subasta = () => {
                         <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
-                        <p className="font-subasta"><strong>Precio inicial:</strong> ${modalData.precioInicial.toLocaleString('es-AR')}</p>
                         <button className="close-button" onClick={closeModal}>X</button>
                     </div>
                 </div>

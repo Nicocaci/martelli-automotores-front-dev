@@ -34,7 +34,7 @@ const HamburgerMenu = () => {
                         { withCredentials: true }
                     );
 
-                    localStorage.removeItem("info");
+                    localStorage.removeItem("cartel");
 
                     // 🔥 Mensaje de cierre de sesión con temporizador
                     Swal.fire({

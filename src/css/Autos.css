@@ -1,6 +1,11 @@
 .Toastify__close-button > svg {
-  height: 30px;
-  width: 30px;
+  width: 30px !important;
+  height: 30px !important;
+  margin-left: 140px;
+  color: red;
+}
+.Toastify__toast-theme--light{
+  font-size: medium;
 }
 
 
