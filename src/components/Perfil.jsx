@@ -9,20 +9,15 @@ const Perfil = () => {
   const [dataUs, setDataUs] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    const token = Cookies.get("acces_token");
-    if(!token){
-      navigate('/login')
-    }
-  },[navigate]);
-
   useEffect(() => {
     const token = Cookies.get("acces_token");
-    if (token) {
+    if (!token) {
+      navigate('/login');
+    } else {
       const decoded = jwtDecode(token);
       setUsuario(decoded._id);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (usuario) {
@@ -32,7 +27,7 @@ const Perfil = () => {
             `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${usuario}`
             //`http://localhost:3000/api/usuarios/${usuario}`
           );
-          setDataUs(response.data); // Aquí guardamos todo el objeto de usuario
+          setDataUs(response.data);
         } catch (error) {
           console.error("Error al obtener los usuarios:", error);
         }
@@ -42,42 +37,48 @@ const Perfil = () => {
   }, [usuario]);
 
   return (
-    <div>
-      <h1>Perfil</h1>
+    <div className="perfil-container">
       {dataUs ? (
-        <div>
-          <p>Agencia: {dataUs.agencia}</p>
-          <p>Dni: {dataUs.dni}</p>
-          <p>Email: {dataUs.email}</p>
-          <p>Dirección: {dataUs.direccion}</p>
-          <p>Teléfono: {dataUs.telefono}</p>
+        <>
+          {/* Sección de información del usuario */}
+          <div className='box'>
+          <h1 className='titulo-admin'>Perfil</h1>
+            <p className='font-subasta'><strong>Agencia:</strong> {dataUs.agencia}</p>
+            <p className='font-subasta'><strong>DNI:</strong> {dataUs.dni}</p>
+            <p className='font-subasta'><strong>Email:</strong> {dataUs.email}</p>
+            <p className='font-subasta'><strong>Dirección:</strong> {dataUs.direccion}</p>
+            <p className='font-subasta'><strong>Teléfono:</strong> {dataUs.telefono}</p>
+          </div>
 
-          {/* Aquí renderizamos las ofertas hechas en tarjetas */}
-          {dataUs.ofertasHechas && dataUs.ofertasHechas.length > 0 ? (
-            <div className="ofertas-cards">
-              {dataUs.ofertasHechas.map((oferta, index) => (
-                <div className="card" key={index} style={cardStyle}>
-                  {oferta.subasta ? ( // Verifica si la subasta existe
-                    <>
-                      <img src={oferta.subasta.autos.img} alt={oferta.subasta.autos.nombre} style={imageStyle} />
-                      <div className="card-content" style={contentStyle}>
-                        <h3>{oferta.subasta.autos.nombre}</h3>
-                        <p>Modelo: {oferta.subasta.autos.modelo}</p>
-                        <p>Motor: {oferta.subasta.autos.motor}</p>
-                        <p>Ubicación: {oferta.subasta.autos.ubicacion}</p>
-                        <p><strong>Monto de oferta: ${oferta.monto}</strong></p>
-                      </div>
-                    </>
-                  ) : (
-                    <p>Esta oferta no tiene una subasta asociada.</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>No se han realizado ofertas.</p>
-          )}
-        </div>
+          {/* Sección de ofertas hechas */}
+          <div className="box">
+            <h1 className='titulo-admin'>Ofertas Hechas</h1>
+            {dataUs.ofertasHechas && dataUs.ofertasHechas.length > 0 ? (
+              <div className="contenedor">
+                {dataUs.ofertasHechas.map((oferta, index) => (
+                  <div className="borde" key={index}>
+                    {oferta.subasta ? (
+                      <>
+                        <img src={oferta.subasta.autos.img} alt={oferta.subasta.autos.nombre} className="img-card"/>
+                        <div className="oferta-content">
+                          <h3>{oferta.subasta.autos.nombre}</h3>
+                          <p className='font-subasta'>Modelo: {oferta.subasta.autos.modelo}</p>
+                          <p className='font-subasta'>Motor: {oferta.subasta.autos.motor}</p>
+                          <p className='font-subasta'>Ubicación: {oferta.subasta.autos.ubicacion}</p>
+                          <p className='font-subasta'><strong>Monto de oferta: ${oferta.monto.toLocaleString()}</strong></p>
+                        </div>
+                      </>
+                    ) : (
+                      <p>Esta oferta no tiene una subasta asociada.</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No se han realizado ofertas.</p>
+            )}
+          </div>
+        </>
       ) : (
         <p>Cargando...</p>
       )}
@@ -85,26 +86,5 @@ const Perfil = () => {
   );
 };
 
-const cardStyle = {
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  width: '250px',
-  margin: '10px',
-  padding: '15px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  display: 'inline-block',
-  textAlign: 'center',
-  backgroundColor: '#fff',
-};
-
-const imageStyle = {
-  width: '100%',
-  height: 'auto',
-  borderRadius: '8px',
-};
-
-const contentStyle = {
-  marginTop: '10px',
-};
-
 export default Perfil;
+

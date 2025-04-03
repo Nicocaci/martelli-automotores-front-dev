@@ -1,6 +1,31 @@
+.mainform{
+    padding-top: 10%;
+    height: 100vh;
+    background-color: black;
+}
+
+.custom-swal-button {
+    background-color: #4CAF50 !important; /* Color verde */
+    color: white !important;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    transition: background-color 0.3s ease;
+    width: 100%;
+  }
+  
+  .custom-swal-button:hover {
+    background-color: #45a049 !important;
+  }
+
+  .boton-swal-error{
+    width: 100%;
+    background-color: red;
+  }
+  
+
 .form {
-    width: 320px;
-    margin: 50px auto;
     padding: 20px;
     background: #1e1e2f;
     border-radius: 12px;
@@ -11,16 +36,18 @@
 
 .form h1 {
     margin-bottom: 20px;
-    font-size: 24px;
+    font-size: x-large;
     color: #f8f8f8;
+    font-family: "Markazi Text", serif;
 }
 
 .form label {
     display: block;
     text-align: left;
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 1.5rem;
     color: #bbb;
+    font-family: "Markazi Text", serif;
 }
 
 .form input {
@@ -45,14 +72,15 @@
     width: 100%;
     padding: 10px;
     margin-top: 15px;
-    background: #00adb5;
+    background: black;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 1.5rem;
     font-weight: bold;
     color: #fff;
     cursor: pointer;
     transition: 0.3s ease;
+    font-family: "Markazi Text", serif;
 }
 
 .form button:hover {
@@ -64,3 +92,10 @@
     font-size: 14px;
     color: #ff4d4d;
 }
+
+@media(max-width:450px){
+    .form{
+        width: 90%;
+    }
+}
+

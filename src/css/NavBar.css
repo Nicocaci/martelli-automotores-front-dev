@@ -3,9 +3,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color:beige;
+    background-color:#EFFAFD;
     height: 15vh;
     padding: 10px 20px;
+    border-bottom: 2px solid black;
+
 }
 
 .logo-container {
@@ -30,6 +32,11 @@
     margin: 0;
 }
 
+.logout{
+    margin: 0;
+    width: auto;
+}
+
 .menu3 {
     color: white;
     text-decoration: none;
@@ -51,6 +58,7 @@
     cursor: pointer;
     font-size: 16px;
     margin-top: 0;
+    width: 100%;
 }
 
 /* Estilos para el botón hamburguesa */
@@ -62,22 +70,19 @@
     cursor: pointer;
     padding: 10px;
     position: absolute;
-    top: 10px;
     right: 10px;
     color: black;
-    height: 8vh;
-    width: 8vw;
+    width: 15%;
 }
 
 /* Estilos para pantallas pequeñas */
-@media (max-width: 480px) {
+@media (max-width: 575px) {
     .menu-btn {
         display: block;
     }
 
-    .menu-btn:hover{
-        color:white;
-        background-color: black;
+    .boton-menu{
+        color: wheat;
     }
 
     .menu {
@@ -100,7 +105,13 @@
         flex-direction: column;
         gap: 10px;
     }
+
+    .menu3 a {
+        color: wheat;
+    }
 }
+
+
 
 
 /* .menu-container {

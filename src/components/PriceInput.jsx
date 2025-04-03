@@ -36,11 +36,11 @@ const PriceInput = ({ subastaId }) => {
             const highestOffer = ofertadores.reduce((max, o) => (o.monto > max.monto ? o : max), ofertadores[0]);
             setHighestBid(highestOffer.monto);
             setHighestBidder(highestOffer.usuario);
-            setPrice(highestOffer.monto + 10000);
+            
           } else {
             setHighestBid(precioInicial);
             setHighestBidder(null);
-            setPrice(precioInicial + 10000);
+            
           }
         }
       } catch (error) {
@@ -85,19 +85,15 @@ const PriceInput = ({ subastaId }) => {
       return;
     }
 
-    if (price < highestBid) {
-      setMessage("Error: Precio menor a la subasta más alta.");
-      return;
-    }
 
     try {
       await axios.put(
         `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
         //`http://localhost:3000/api/subasta/${subastaId}/ofertadores`,
-        { monto: price, usuario: userId },
+        { monto: highestBid + price, usuario: userId },
         { headers: { "Content-Type": "application/json" } }
       );
-      setMessage("Oferta enviada con éxito.");
+      setMessage(" ✅ Oferta enviada con éxito.");
     } catch (error) {
       console.error("Error al ofertar:", error);
       setMessage("Error al enviar la oferta.");
@@ -107,15 +103,12 @@ const PriceInput = ({ subastaId }) => {
   const formatPrice = (value) => value.toLocaleString('es-AR');
 
   return (
-    <div className="price">
-      <label htmlFor="price" className="text-lg font-semibold">
-        Ofertar subasta:
-      </label>
-      <p className="text-lg">
+    <div className="font-precio">
+      <p className="font-subasta">
         {userId && highestBidder && userId === highestBidder._id ? (
-          <span className="font-bold text-green-600">¡Tu subasta es la más alta!</span>
+          <span className="oferta-mas-alta">🏆¡Tu subasta es la más alta!🏆</span>
         ) : (
-          <>Oferta más alta: <span className="font-bold text-red-600">${formatPrice(highestBid)}</span></>
+          <>Oferta más alta: <span className="font-subasta">${formatPrice(highestBid)}</span></>
         )}
       </p>
       <div className="input-price">
@@ -125,20 +118,19 @@ const PriceInput = ({ subastaId }) => {
           id="price"
           value={price > 0 ? formatPrice(price) : ""}
           onChange={handleChange}
-          placeholder="Escriba un precio"
-          className="border-2 border-gray-300 rounded-lg p-2 w-32 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="$ Escriba un precio"
+          className="font-subasta"
           onFocus={(e) => e.target.select()} // Para que seleccione todo el texto al hacer clic
         />
         <button onClick={handleIncrease} className="boton-mas">+</button>
       </div>
-      <p className="text-lg">
-        Ofertar en: <span className="font-bold text-blue-600">${formatPrice(price)}</span>
+      <p className="font-subasta">
+        Ofertar en: <span className="font-bold text-blue-600">${formatPrice(highestBid + price)}</span>
       </p>
       <div className="flex gap-4">
         <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Ofertar Subasta</button>
       </div>
-      {message && <p className="mt-2 text-sm text-gray-700">{message}</p>}
-      <button className="btn-detalle">Ver detalle</button>
+      {message && <p className="font-subasta">{message}</p>}
     </div>
   );
 };

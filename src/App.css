@@ -7,7 +7,9 @@
 
 .main{
   background-color: grey;
+  padding-bottom: 10%;
 }
+
 .toast-custom {
   font-size: 25px; /* Cambia el tamaño de la fuente */
   padding: 20px;
@@ -44,9 +46,17 @@ input[type="text"],
 
 input[type="button"],
 button {
-  background-color: rgb(39, 131, 212);
+  background-color: black;
   padding: 10px;
   border: 0;
   border-radius: 5px;
   color: white;
+  width: 50%;
+  margin: 2%;
+}
+
+@media(max-width:810px){
+  .main{
+    height: 100%;
+  }
 }

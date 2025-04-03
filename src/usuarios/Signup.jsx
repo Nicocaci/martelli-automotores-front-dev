@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
+import '../css/Signup.css'
 
 const Signup = () => {
   const [agencia, setAgencia] = useState("");
@@ -44,6 +46,7 @@ const Signup = () => {
   }
 
   return (
+    <div className='main-registro'>
     <form className='form' onSubmit={handleSubmit}>
       <h1>Registro de Usuario</h1>
       <label>Nombre de Agencia:</label>
@@ -59,7 +62,11 @@ const Signup = () => {
       <label>Direccion:</label>
       <input type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
       <button type="submit">Registrarse</button>
+      <Link to="/login">
+        <button className='' type="button">Iniciar Sesion</button>
+      </Link>
     </form>
+    </div>
   );
 };
 
