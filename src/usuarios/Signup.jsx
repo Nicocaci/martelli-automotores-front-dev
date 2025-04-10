@@ -8,6 +8,8 @@ import '../css/Signup.css'
 const Signup = () => {
   const [agencia, setAgencia] = useState("");
   const [dni, setDni] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,18 +18,20 @@ const Signup = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(agencia, dni, telefono, email, password, direccion);
+    console.log(nombre, razonSocial, agencia, dni, telefono, email, password, direccion);
 
     try {
       const response = await axios.post(
         "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register"
         //"http://localhost:3000/api/usuarios/register"
         ,
-        { agencia, dni, telefono, email, password, direccion },
+        { nombre,razonSocial,agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
       console.log("Registro exitoso");
+      setNombre("");
+      setRazonSocial("");
       setAgencia("");
       setDni("");
       setTelefono("");
@@ -49,9 +53,13 @@ const Signup = () => {
     <div className='main-registro'>
     <form className='form' onSubmit={handleSubmit}>
       <h1>Registro de Usuario</h1>
-      <label>Nombre de Agencia:</label>
+      <label>Nombre Completo:</label>
+      <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+      <label>Empresa:</label>
       <input type="text" value={agencia} onChange={(e) => setAgencia(e.target.value)} required />
-      <label>Dni:</label>
+      <label>Razón Social:</label>
+      <input type="text" value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} required />
+      <label>DNI/CUIT:</label>
       <input type="text" value={dni} onChange={(e) => setDni(e.target.value)} required />
       <label>Telefono:</label>
       <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />

@@ -10,12 +10,8 @@ import PerfilAdmin from './components/PerfilAdmin';
 import Footer from './components/Footer';
 
 const AppContent = () => {
-  const location = useLocation();
-  const hideNavRoutes = ["/login"];
-
   return (
     <div className='main'>
-      {!hideNavRoutes.includes(location.pathname) && <NavBar />}
       
       <Routes>
         <Route exact path="/" element={<Login />} />
@@ -31,8 +27,17 @@ const AppContent = () => {
 };
 
 const App = () => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').catch(err => {
+        console.error("Error registrando service worker:", err);
+      });
+    });
+  }
+  
   return (
     <BrowserRouter>
+      <NavBar/>
       <AppContent />
     </BrowserRouter>
   );

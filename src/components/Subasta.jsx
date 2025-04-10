@@ -22,20 +22,20 @@ const Subasta = () => {
     useEffect(() => {
         const cartel = localStorage.getItem("cartel");
 
-        if(!cartel){
-        // Mostrar el mensaje de alerta con toast
-        toast.info("Bienvenido a AutoAPP\n\n" +
-            "• La oferta ganadora deberá ser abonada dentro de los 7 días del cierre de la subasta.\n\n" +
-            "• Una vez abonada, se podrá retirar la unidad y las cédulas.\n" +
-            "• Al vender el rodado, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.\n\n" +
-            "• Si el vehículo no es vendido dentro de los noventa días subastado, se procederá a transferir el mismo al ganador de la subasta.", {
-            position: "top-center", // Puedes cambiar la posición
-            autoClose: 100000, // Duración en milisegundos
-            hideProgressBar: false, // Ocultar barra de progreso
-            closeOnClick: true,
-            className: "toast-custom"  // Cerrar al hacer click
-        });
-        localStorage.setItem("cartel", "true");
+        if (!cartel) {
+            // Mostrar el mensaje de alerta con toast
+            toast.info("Bienvenido a AutoAPP\n\n" +
+                "• La oferta ganadora deberá ser abonada dentro de los 7 días del cierre de la subasta.\n\n" +
+                "• Una vez abonada, se podrá retirar la unidad y las cédulas.\n" +
+                "• Al vender el rodado, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.\n\n" +
+                "• Si el vehículo no es vendido dentro de los noventa días subastado, se procederá a transferir el mismo al ganador de la subasta.", {
+                position: "top-center", // Puedes cambiar la posición
+                autoClose: 100000, // Duración en milisegundos
+                hideProgressBar: false, // Ocultar barra de progreso
+                closeOnClick: true,
+                className: "toast-custom"  // Cerrar al hacer click
+            });
+            localStorage.setItem("cartel", "true");
         }
     }, []);
     useEffect(() => {
@@ -146,16 +146,18 @@ const Subasta = () => {
             <ToastContainer />
             <div className="contenedor">
                 {subasta.length > 0 ? (
-                    subasta.map((sub) => (
-                        <div key={sub._id} className="borde">
-                            <h1 className="titulo">{sub.autos?.nombre}</h1>
-                            <img src={sub.autos?.img} alt={sub.autos?.nombre} className="img-card" />
-                            <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4>
-                            <Cronometro subastaId={sub._id} />
-                            <PriceInput className="price" subastaId={sub._id} />
-                            <button className="button" onClick={() => openModal(sub._id)}>Ver detalle</button>
-                        </div>
-                    ))
+                    subasta
+                        .filter((sub) => !sub.finalizada) // Asegurate que 'finalizada' exista
+                        .map((sub) => (
+                            <div key={sub._id} className="borde">
+                                <h1 className="titulo">{sub.autos?.nombre}</h1>
+                                <img src={sub.autos?.img} alt={sub.autos?.nombre} className="img-card" />
+                                <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4>
+                                <Cronometro subastaId={sub._id} />
+                                <PriceInput className="price" subastaId={sub._id} />
+                                <button className="button" onClick={() => openModal(sub._id)}>Ver detalle</button>
+                            </div>
+                        ))
                 ) : (
                     <p>No hay autos disponibles.</p>
                 )}

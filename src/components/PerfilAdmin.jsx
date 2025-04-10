@@ -26,6 +26,7 @@ const PerfilAdmin = () => {
     const [error, setError] = useState(false);
     const [ofertadores, setOfertadores] = useState([]); // Estado para almacenar ofertadores
     const [subastaSeleccionada, setSubastaSeleccionada] = useState(null); // Estado para manejar la subasta seleccionada
+    const [usuarios, setUsuarios] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,6 +35,21 @@ const PerfilAdmin = () => {
             navigate('/login')
         }
     }, [navigate]);
+
+    useEffect(() => {
+        const fetchUsuarios = async () => {
+            try {
+                const response = await axios.get(
+                    "https://martelli-automotes-back-production.up.railway.app/api/usuarios"
+                    //"http://localhost:3000/api/usuarios"
+                );
+                setUsuarios(response.data)
+            } catch (error) {
+                console.error("Error al obtener los usuarios:", error);
+            }
+        };
+        fetchUsuarios();
+    }, []);
 
     useEffect(() => {
         const fetchSubastas = async () => {
@@ -69,6 +85,38 @@ const PerfilAdmin = () => {
             setFormData({ ...formData, [name]: value });
         }
     };
+    const handleDeleteUsuario = async (id) => {
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Esta acción eliminará al usuario permanentemente.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            customClass: {
+                confirmButton: "custom-swal-confirm",
+                cancelButton: "custom-swal-cancel"
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await axios.delete(
+                        `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${id}`
+                        //`http://localhost:3000/api/usuarios/${id}`
+                        
+                    );
+                    Swal.fire("¡Eliminado!", "El usuario ha sido eliminado.", "success");
+
+                    // Actualizar la lista local de usuarios
+                    setUsuarios(usuarios.filter((user) => user._id !== id));
+                } catch (error) {
+                    console.error("Error al eliminar usuario:", error);
+                    Swal.fire("Error", "No se pudo eliminar el usuario.", "error");
+                }
+            }
+        });
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -131,12 +179,30 @@ const PerfilAdmin = () => {
         });
     };
 
+    const toggleAprobado = async (id) => {
+        try {
+            await axios.patch(
+                `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${id}/aprobado`
+                //`http://localhost:3000/api/usuarios/${id}/aprobado`
+            );
+            // Después de cambiar, actualizamos la lista
+            const response = await axios.get(
+                "https://martelli-automotes-back-production.up.railway.app/api/usuarios"
+                //"http://localhost:3000/api/usuarios"
+            );
+            setUsuarios(response.data);
+        } catch (error) {
+            console.error("Error al cambiar el estado de aprobado:", error);
+        }
+    };
+
+
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta subasta?")) {
             try {
                 await axios.delete(
-                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`
-                    //`http://localhost:3000/api/subasta/${id}`
+                    //`https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`
+                    `http://localhost:3000/api/subasta/${id}`
                 );
                 alert("Subasta eliminada exitosamente");
                 setSubastas(subastas.filter(sub => sub._id !== id));
@@ -221,6 +287,43 @@ const PerfilAdmin = () => {
                     </div>
                 </div>
             )}
+            {/* Sección para mostrar usuarios registrados */}
+            <div className='usuarios-registrados'>
+                <h2 className='titulo-admin'>Usuarios Registrados</h2>
+                {usuarios ? (
+                    usuarios.length > 0 ? (
+                        <ul>
+                            {usuarios.map((usuario) => (
+                                <li key={usuario._id}>
+                                    <p><strong>Nombre Completo:</strong> {usuario.nombre}</p>
+                                    <p><strong>Empresa:</strong> {usuario.agencia}</p>
+                                    <p><strong>Razón Social:</strong> {usuario.razonSocial}</p>
+                                    <p><strong>Dni:</strong> {usuario.dni}</p>
+                                    <p><strong>Telefono:</strong> {usuario.telefono}</p>
+                                    <p><strong>Direccion:</strong> {usuario.direccion}</p>
+                                    <p><strong>Email:</strong> {usuario.email}</p>
+                                    <p><strong>Rol:</strong> {usuario.rol}</p>
+                                    <p><strong>Aprobado:</strong> {usuario.aprobado ? "Sí" : "No"}</p>
+
+                                    <button onClick={() => toggleAprobado(usuario._id)}>
+                                        {usuario.aprobado ? "Desaprobar" : "Aprobar"}
+                                    </button>
+                                    <button onClick={() => handleDeleteUsuario(usuario._id)} style={{ marginLeft: "10px", backgroundColor: "red", color: "white" }}>
+                                        Eliminar Usuario
+                                    </button>
+
+                                    {/* Agregá más campos si necesitás mostrar más info */}
+                                    <hr />
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No hay usuarios registrados.</p>
+                    )
+                ) : (
+                    <p>Cargando usuarios...</p>
+                )}
+            </div>
         </div>
     );
 }

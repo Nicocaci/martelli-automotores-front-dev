@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import pic from '/pic.jpg';
 import Swal from 'sweetalert2';
 
 const Login = () => {
@@ -30,11 +29,13 @@ const Login = () => {
       return;
     }
     try {
+      const normalizedEmail = email.trim().toLowerCase(); // ⬅️ normalización
+  
       const response = await axios.post(
         "https://martelli-automotes-back-production.up.railway.app/api/usuarios/login"
         //"http://localhost:3000/api/usuarios/login"
         ,
-        { email, password },
+        { email: normalizedEmail, password },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
       console.log("Headers recibidos:", response.headers); // 🔍 Ver cookies en la respuesta
