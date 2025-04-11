@@ -10,30 +10,6 @@ import Swal from 'sweetalert2';
 const NavBar = () => {
     const [rol, setRol] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
-    const [showInstallButton, setShowInstallButton] = useState(false);
-
-    useEffect(() => {
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            setDeferredPrompt(e);
-            setShowInstallButton(true);
-        });
-    }, []);
-    const handleInstallClick = async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('El usuario aceptó la instalación');
-            } else {
-                console.log('El usuario rechazó la instalación');
-            }
-            setDeferredPrompt(null);
-            setShowInstallButton(false);
-        }
-    };
-
     useEffect(() => {
         const checkToken = () => {
             const token = Cookies.get('acces_token');
@@ -125,7 +101,7 @@ const NavBar = () => {
     return (
         <nav className='navBar'>
             <div className='logo-container'>
-                <img className='logo' src={logo} alt="logo" />
+                <Link to="/"><img className='logo' src={logo} alt="logo" /></Link>
             </div>
 
 
@@ -136,16 +112,9 @@ const NavBar = () => {
             {/* Menú */}
             <div className={`menu ${menuOpen ? 'show' : ''}`}>
                 <ul className="menu2">
-                    <li className="menu3"><Link to="/login">Iniciar Sesión</Link></li>
-                    <li className="menu3"><Link to="/signup">Registo de Usuario</Link></li>
                     <li className="menu3"><Link to="/subasta">Inicio</Link></li>
                     <li className="menu3"><Link to={rol === "admin" ? "/perfilAdmin" : "/perfil"}>Perfil</Link></li>
                     <li className="menu3"><button className='boton-menu' onClick={handleLogout}>Cerrar Sesión</button></li>
-                    {showInstallButton && (
-                        <li className="menu3">
-                            <button className='boton-menu' onClick={handleInstallClick}>Instalar App</button>
-                        </li>
-                    )}
                 </ul>
             </div>
         </nav>

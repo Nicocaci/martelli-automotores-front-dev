@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color:#EFFAFD;
+    background-color: #EFFAFD;
     height: 15vh;
     padding: 10px 20px;
     border-bottom: 2px solid black;
@@ -32,7 +32,7 @@
     margin: 0;
 }
 
-.logout{
+.logout {
     margin: 0;
     width: auto;
 }
@@ -45,6 +45,9 @@
 .menu3 a {
     color: black;
     text-decoration: none;
+    font-family: "Limelight", sans-serif ;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .menu3 a:hover {
@@ -57,8 +60,10 @@
     color: black;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 0;
     width: 100%;
+    font-family: "Limelight", sans-serif ;
+    font-weight: 400;
+    font-style: normal;
 }
 
 /* Estilos para el botón hamburguesa */
@@ -81,7 +86,7 @@
         display: block;
     }
 
-    .boton-menu{
+    .boton-menu {
         color: wheat;
     }
 

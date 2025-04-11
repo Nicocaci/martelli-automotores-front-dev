@@ -11,6 +11,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showInstallButton, setShowInstallButton] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const navigate = useNavigate();
 
   // VERIFICAMOS TOKEN
@@ -30,7 +32,7 @@ const Login = () => {
     }
     try {
       const normalizedEmail = email.trim().toLowerCase(); // ⬅️ normalización
-  
+
       const response = await axios.post(
         "https://martelli-automotes-back-production.up.railway.app/api/usuarios/login"
         //"http://localhost:3000/api/usuarios/login"
@@ -54,7 +56,7 @@ const Login = () => {
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message || "Error en el inicio de sesión");
-         // 🔥 Mostrar SweetAlert en caso de error
+        // 🔥 Mostrar SweetAlert en caso de error
         Swal.fire({
           title: "Error",
           text: error.response.data.message || "Error en el inicio de sesión",
@@ -79,20 +81,52 @@ const Login = () => {
     };
   };
 
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('El usuario aceptó la instalación');
+      } else {
+        console.log('El usuario rechazó la instalación');
+      }
+      setDeferredPrompt(null);
+      setShowInstallButton(false);
+    }
+  };
+
   return (
     <div className='mainform'>
-    <form className='form' onSubmit={handleLogin}>
-      <h1>Login</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <label htmlFor="">Email:</label>
-      <input type="text" name='email' value={email} onChange={(e) => setEmail(e.target.value)} />
-      <label htmlFor="">Contraseña:</label>
-      <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button className='' type='submit'>Iniciar sesión</button>
-      <Link to="/signup">
-        <button className='' type="button">Registrarse</button>
-      </Link>
-    </form>
+      <form className='form' onSubmit={handleLogin}>
+        <h1>Login</h1>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <label htmlFor="">Email:</label>
+        <input type="text" name='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+        <label htmlFor="">Contraseña:</label>
+        <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button className='' type='submit'>Iniciar sesión</button>
+        {showInstallButton && (
+          <button className='boton-menu' onClick={handleInstallClick}>Instalar App</button>
+        )}
+        <Link to="/signup">
+          <button className='' type="button">Registrarse</button>
+        </Link>
+
+      </form>
     </div>
   )
 }

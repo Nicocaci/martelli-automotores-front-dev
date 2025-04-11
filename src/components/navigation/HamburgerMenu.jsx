@@ -28,8 +28,8 @@ const HamburgerMenu = () => {
             if (result.isConfirmed) {
                 try {
                     await axios.post(
-                        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
-                        //"http://localhost:3000/api/usuarios/logout",
+                        //"https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
+                        "http://localhost:3000/api/usuarios/logout",
                         {},
                         { withCredentials: true }
                     );
@@ -94,13 +94,6 @@ const HamburgerMenu = () => {
                     className="menu-dropdown"
                 >
                     <ul className="menu-list">
-                        <li className="menu-item"><Link to="/login">Iniciar Sesión</Link></li>
-
-                        {/* Mostrar "Registrarse" solo si el rol es "admin" */}
-                        {rol === "admin" && (
-                            <li className="menu-item"><Link to="/signup">Registro Usuario</Link></li>
-                        )}
-
                         <li className="menu-item"><Link to="/subasta">Inicio</Link></li>
                         <li className="menu-item"><Link to={rol === "admin" ? "/perfilAdmin" : "/perfil"}>Perfil</Link></li>
                         <li className="menu-item"><button className="logout" onClick={handleLogout}>Cerrar Sesión</button></li>

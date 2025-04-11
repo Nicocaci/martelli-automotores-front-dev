@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
-import '../css/Signup.css'
+import '../css/Signup.css';
+import Swal from 'sweetalert2';
 
 const Signup = () => {
   const [agencia, setAgencia] = useState("");
@@ -13,19 +14,35 @@ const Signup = () => {
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState(""); // Nuevo campo
   const [direccion, setDireccion] = useState("");
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log(nombre, razonSocial, agencia, dni, telefono, email, password, direccion);
+
+    if (password !== repeatPassword) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Las contraseñas no coinciden',
+        icon: 'error',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Solicitud de registro enviada...',
+      text: 'Estamos procesando tu solicitud.',
+      icon: 'info',
+      showConfirmButton: false,
+      timer: 2000,
+    });
 
     try {
       const response = await axios.post(
-        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register"
-        //"http://localhost:3000/api/usuarios/register"
-        ,
-        { nombre,razonSocial,agencia, dni, telefono, email, password, direccion },
+        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
+        //"http://localhost:3000/api/usuarios/register",
+        { nombre, razonSocial, agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
@@ -37,6 +54,7 @@ const Signup = () => {
       setTelefono("");
       setEmail("");
       setPassword("");
+      setRepeatPassword("");
       setDireccion("");
 
       navigate("/login");
@@ -51,29 +69,31 @@ const Signup = () => {
 
   return (
     <div className='main-registro'>
-    <form className='form' onSubmit={handleSubmit}>
-      <h1>Registro de Usuario</h1>
-      <label>Nombre Completo:</label>
-      <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-      <label>Empresa:</label>
-      <input type="text" value={agencia} onChange={(e) => setAgencia(e.target.value)} required />
-      <label>Razón Social:</label>
-      <input type="text" value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} required />
-      <label>DNI/CUIT:</label>
-      <input type="text" value={dni} onChange={(e) => setDni(e.target.value)} required />
-      <label>Telefono:</label>
-      <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
-      <label>Email:</label>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <label>Password:</label>
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      <label>Direccion:</label>
-      <input type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
-      <button type="submit">Registrarse</button>
-      <Link to="/login">
-        <button className='' type="button">Iniciar Sesion</button>
-      </Link>
-    </form>
+      <form className='form' onSubmit={handleSubmit}>
+        <h1>Registro de Usuario</h1>
+        <label>Nombre Completo:</label>
+        <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+        <label>Empresa:</label>
+        <input type="text" value={agencia} onChange={(e) => setAgencia(e.target.value)} required />
+        <label>Razón Social:</label>
+        <input type="text" value={razonSocial} onChange={(e) => setRazonSocial(e.target.value)} required />
+        <label>DNI/CUIT:</label>
+        <input type="text" value={dni} onChange={(e) => setDni(e.target.value)} required />
+        <label>Dirección:</label>
+        <input type="text" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
+        <label>Teléfono:</label>
+        <input type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} required />
+        <label>Email:</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <label>Contraseña:</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <label>Repetir Contraseña:</label>
+        <input type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} required />
+        <button type="submit">Registrarse</button>
+        <Link to="/login">
+          <button type="button">Iniciar Sesión</button>
+        </Link>
+      </form>
     </div>
   );
 };

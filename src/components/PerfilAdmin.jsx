@@ -103,7 +103,7 @@ const PerfilAdmin = () => {
                     await axios.delete(
                         `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${id}`
                         //`http://localhost:3000/api/usuarios/${id}`
-                        
+
                     );
                     Swal.fire("¡Eliminado!", "El usuario ha sido eliminado.", "success");
 
@@ -201,8 +201,8 @@ const PerfilAdmin = () => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta subasta?")) {
             try {
                 await axios.delete(
-                    //`https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`
-                    `http://localhost:3000/api/subasta/${id}`
+                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`
+                    //`http://localhost:3000/api/subasta/${id}`
                 );
                 alert("Subasta eliminada exitosamente");
                 setSubastas(subastas.filter(sub => sub._id !== id));
@@ -270,14 +270,16 @@ const PerfilAdmin = () => {
                         {ofertadores.length > 0 ? (
                             <ul>
                                 {/* Ordenamos los ofertadores de mayor a menor por monto */}
-
                                 {ofertadores
-                                    .sort((a, b) => b.monto - a.monto) // Ordenar de mayor a menor
-                                    .map((ofertador, index) => (
-                                        <li key={index}>
-                                            <strong className='font-subasta'>{ofertador.usuario.agencia}</strong> - $<span className="font-subasta">{ofertador.monto.toLocaleString()}</span>
-                                        </li>
-                                    ))}
+                                    .sort((a, b) => b.monto - a.monto)
+                                    .map((ofertador, index) => {
+                                        const agencia = ofertador?.usuario?.agencia || "Desconocido";
+                                        return (
+                                            <li key={index}>
+                                                <strong className='font-subasta'>{agencia}</strong> - ${ofertador.monto.toLocaleString()}
+                                            </li>
+                                        );
+                                    })}
 
                             </ul>
                         ) : (
@@ -295,15 +297,15 @@ const PerfilAdmin = () => {
                         <ul>
                             {usuarios.map((usuario) => (
                                 <li key={usuario._id}>
-                                    <p><strong>Nombre Completo:</strong> {usuario.nombre}</p>
-                                    <p><strong>Empresa:</strong> {usuario.agencia}</p>
-                                    <p><strong>Razón Social:</strong> {usuario.razonSocial}</p>
-                                    <p><strong>Dni:</strong> {usuario.dni}</p>
-                                    <p><strong>Telefono:</strong> {usuario.telefono}</p>
-                                    <p><strong>Direccion:</strong> {usuario.direccion}</p>
-                                    <p><strong>Email:</strong> {usuario.email}</p>
-                                    <p><strong>Rol:</strong> {usuario.rol}</p>
-                                    <p><strong>Aprobado:</strong> {usuario.aprobado ? "Sí" : "No"}</p>
+                                    <p className='font-usuarios'>Nombre Completo: {usuario.nombre}</p>
+                                    <p className='font-usuarios'>Empresa: {usuario.agencia}</p>
+                                    <p className='font-usuarios'>Razón Social: {usuario.razonSocial}</p>
+                                    <p className='font-usuarios'>Dni: {usuario.dni}</p>
+                                    <p className='font-usuarios'>Telefono: {usuario.telefono}</p>
+                                    <p className='font-usuarios'>Direccion: {usuario.direccion}</p>
+                                    <p className='font-usuarios'>Email: {usuario.email}</p>
+                                    <p className='font-usuarios'>Rol: {usuario.rol}</p>
+                                    <p className='font-usuarios'>Aprobado: {usuario.aprobado ? "Sí" : "No"}</p>
 
                                     <button onClick={() => toggleAprobado(usuario._id)}>
                                         {usuario.aprobado ? "Desaprobar" : "Aprobar"}

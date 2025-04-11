@@ -19,3 +19,9 @@
 .usuarios-registrados li {
     margin-bottom: 1rem;
 }
+
+.font-usuarios{
+    color: black;
+    font-family: "Markazi Text", serif;
+    font-size: x-large;
+}
