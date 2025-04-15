@@ -10,6 +10,9 @@ import Swal from 'sweetalert2';
 const NavBar = () => {
     const [rol, setRol] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [perfilDropdownOpen, setPerfilDropdownOpen] = useState(false);
+
+
     useEffect(() => {
         const checkToken = () => {
             const token = Cookies.get('acces_token');
@@ -90,13 +93,16 @@ const NavBar = () => {
             if (menuOpen && !event.target.closest('.menu') && !event.target.closest('.menu-btn')) {
                 setMenuOpen(false);
             }
+            if (perfilDropdownOpen && !event.target.closest('.perfil-dropdown') && !event.target.closest('.perfil-btn')) {
+                setPerfilDropdownOpen(false)
+            }
         };
 
         document.addEventListener('click', handleClickOutside);
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [menuOpen]);
+    }, [menuOpen, perfilDropdownOpen]);
 
     return (
         <nav className='navBar'>
@@ -113,7 +119,22 @@ const NavBar = () => {
             <div className={`menu ${menuOpen ? 'show' : ''}`}>
                 <ul className="menu2">
                     <li className="menu3"><Link to="/subasta">Inicio</Link></li>
-                    <li className="menu3"><Link to={rol === "admin" ? "/perfilAdmin" : "/perfil"}>Perfil</Link></li>
+                    {rol === "admin" ? (
+                        <li className="menu3 perfil-btn" onClick={() => setPerfilDropdownOpen(!perfilDropdownOpen)}>
+                            <button className='boton-menu'>Perfil ⬇</button>
+                            {perfilDropdownOpen && (
+                                <ul className="perfil-dropdown">
+                                    <li><Link to="/crearsubasta">Crear Subasta</Link></li>
+                                    <li><Link to="/registrosubasta">Registro de Subastas</Link></li>
+                                    <li><Link to="/usuarios">Registro de Usuarios</Link></li>
+                                </ul>
+                            )}
+                        </li>
+                    ) : (
+                        <li className="menu3">
+                            <Link to="/perfil">Perfil</Link>
+                        </li>
+                    )}
                     <li className="menu3"><button className='boton-menu' onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>
             </div>

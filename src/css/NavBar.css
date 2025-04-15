@@ -38,8 +38,11 @@
 }
 
 .menu3 {
-    color: white;
+    color: black;
     text-decoration: none;
+    font-family: "Limelight", sans-serif ;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .menu3 a {
@@ -79,6 +82,24 @@
     color: black;
     width: 15%;
 }
+.perfil-dropdown {
+    position: absolute;
+    background: #333;
+    border: 1px solid #ccc;
+    list-style: none;
+    padding: 10px;
+    margin-top: 5px;
+    z-index: 10;
+}
+
+.perfil-dropdown li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.perfil-dropdown li:hover {
+    background-color: #f0f0f0;
+}
 
 /* Estilos para pantallas pequeñas */
 @media (max-width: 575px) {
@@ -109,6 +130,9 @@
     .menu2 {
         flex-direction: column;
         gap: 10px;
+    }
+    .menu3 {
+        color: wheat;
     }
 
     .menu3 a {

@@ -17,6 +17,7 @@ const Subasta = () => {
     const [highestBids, setHighestBids] = useState({});
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -144,10 +145,20 @@ const Subasta = () => {
     return (
         <div className="box">
             <ToastContainer />
+            <input
+                type="text"
+                placeholder="Buscar auto por nombre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="input-busqueda"
+            />
             <div className="contenedor">
                 {subasta.length > 0 ? (
                     subasta
-                        .filter((sub) => !sub.finalizada) // Asegurate que 'finalizada' exista
+                        .filter((sub) =>
+                            !sub.finalizada &&
+                            sub.autos?.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
                         .map((sub) => (
                             <div key={sub._id} className="borde">
                                 <h1 className="titulo">{sub.autos?.nombre}</h1>

@@ -6,8 +6,9 @@ import NavBar from './components/navigation/NavBar';
 import Perfil from './components/Perfil';
 import Login from './usuarios/Login';
 import Signup from './usuarios/Signup';
-import PerfilAdmin from './components/PerfilAdmin';
-import Footer from './components/Footer';
+import CrearSubata from './components/navigation/CrearSubata';
+import RegistroSubasta from './components/navigation/RegistroSubasta';
+import Usuarios from './components/navigation/Usuarios';
 
 const AppContent = () => {
   return (
@@ -18,7 +19,10 @@ const AppContent = () => {
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/perfil" element={<Perfil />} />
-        <Route exact path="/perfilAdmin" element={<PerfilAdmin />} />
+        <Route exact path="/perfil" element={<Perfil />} />
+        <Route exact path="/crearsubasta" element={<CrearSubata />} />
+        <Route exact path="/registroSubasta" element={<RegistroSubasta />} />
+        <Route exact path="/usuarios" element={<Usuarios />} />
         <Route exact path="/subasta" element={<Subasta />} />
         <Route exact path="/logout" />
       </Routes>

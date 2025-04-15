@@ -37,7 +37,6 @@ label {
 
 input[type="text"],
 [type="password"] {
-  display: block;
   padding: 10px;
   box-sizing: border-box;
   width: 100%;
