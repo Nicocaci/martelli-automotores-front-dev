@@ -1,20 +1,28 @@
-*{
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+
+
+
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  
+
 }
 
-.main{
+.main {
   background-color: grey;
   padding-bottom: 10%;
 }
 
 .toast-custom {
-  font-size: 25px; /* Cambia el tamaño de la fuente */
+  font-size: 25px;
+  /* Cambia el tamaño de la fuente */
   padding: 20px;
-   /* Ajusta el padding */
+  /* Ajusta el padding */
 }
+
 :root {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
@@ -35,12 +43,25 @@ label {
   margin: 0 auto;
 }
 
+textarea {
+  resize: none;         /* Evita que el usuario pueda redimensionarlo */
+  width: 100%;          /* Que ocupe todo el ancho del contenedor */
+  height: 100px;        /* Alto fijo, ajustalo según necesites */
+  padding: 0.5rem;      /* Espaciado interno */
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
 input[type="text"],
 [type="password"] {
   padding: 10px;
+  display: flex;
   box-sizing: border-box;
-  width: 100%;
-  margin: 5px 0 10px 0;
+  width: 50%;
+  margin: auto;
+  margin-top: 10px;
 }
 
 input[type="button"],
@@ -57,8 +78,8 @@ button {
   font-style: normal;
 }
 
-@media(max-width:810px){
-  .main{
+@media(max-width:810px) {
+  .main {
     height: 100%;
   }
 }

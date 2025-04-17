@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Cronometro from './Cronometro.jsx';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../../css/CardSubasta.css'
 
 const RegistroSubasta = () => {
     const [subastas, setSubastas] = useState([]);
@@ -13,7 +14,7 @@ const RegistroSubasta = () => {
     const [modeloTerm, setModeloTerm] = useState("");
     const [ubicacionTerm, setUbicacionTerm] = useState("");
     const [mostrarFinalizadas, setMostrarFinalizadas] = useState("todas"); // opciones: "todas", "finalizadas", "activas"
-    
+
 
     useEffect(() => {
         const fetchSubastas = async () => {
@@ -131,7 +132,14 @@ const RegistroSubasta = () => {
                                 return (
                                     <div key={sub._id} className='borde'>
                                         <h1 className='titulo'>{sub.autos?.nombre}</h1>
-                                        <img src={sub.autos?.img} alt={sub.autos?.nombre} className='img-card' />
+                                        <img
+                                            src={
+                                                `https://martelli-automotes-back-production.up.railway.app/uploads/${sub.autos?.img?.[0]}`
+                                                //`http://localhost:3000/uploads/${sub.autos?.img?.[0]}`
+                                            }
+                                            alt={sub.autos?.nombre}
+                                            className='img-card'
+                                        />
                                         <h4 className='font-subasta'>Precio Inicial: ${sub.precioInicial.toLocaleString()}</h4>
                                         <h4 className='font-subasta'>Oferta más alta: ${maxOferta.toLocaleString()}</h4>
                                         <Cronometro subastaId={sub._id} />

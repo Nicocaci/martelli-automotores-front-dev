@@ -11,6 +11,30 @@
 
 /* Contenedor principal */
 
+/* Define el tamaño del slider y que las imágenes no se apilen */
+.slick-slider {
+  width: 100%;
+  max-width: 300px; /* o lo que quieras */
+  margin: 0 auto;
+}
+
+.slick-slide img {
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Para evitar que se vean todas las imágenes apiladas */
+.slick-track {
+  display: flex !important;
+}
+.slick-next:before{
+  color: black;
+}
+.slick-prev:before{
+  color:black;
+}
+
+
 .input-busqueda {
   padding: 10px;
   margin-bottom: 20px;

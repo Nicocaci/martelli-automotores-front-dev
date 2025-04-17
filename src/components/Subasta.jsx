@@ -8,6 +8,7 @@ import "../css/Autos.css";
 import socket from "../utils/Socket.js";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Slider from "react-slick";
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
@@ -24,18 +25,25 @@ const Subasta = () => {
         const cartel = localStorage.getItem("cartel");
 
         if (!cartel) {
-            // Mostrar el mensaje de alerta con toast
-            toast.info("Bienvenido a AutoAPP\n\n" +
-                "• La oferta ganadora deberá ser abonada dentro de los 7 días del cierre de la subasta.\n\n" +
-                "• Una vez abonada, se podrá retirar la unidad y las cédulas.\n" +
-                "• Al vender el rodado, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.\n\n" +
-                "• Si el vehículo no es vendido dentro de los noventa días subastado, se procederá a transferir el mismo al ganador de la subasta.", {
-                position: "top-center", // Puedes cambiar la posición
-                autoClose: 100000, // Duración en milisegundos
-                hideProgressBar: false, // Ocultar barra de progreso
-                closeOnClick: true,
-                className: "toast-custom"  // Cerrar al hacer click
-            });
+            toast.info(
+                <div style={{ textAlign: 'center' }}>
+                    <h3 style={{ marginBottom: '10px' }}>Bienvenidos</h3>
+                    <ul style={{ textAlign: 'left', margin: '0 auto', maxWidth: '400px' }}>
+                        <li>Deberá ser abonada dentro de los 7 días la oferta ganadora para poder retirar la unidad.</li>
+                        <li>Si el vehículo no se ha vendido dentro de los 90 días de retirado, se procederá a transferir el vehículo al ganador de la subasta.</li>
+                        <li>En caso de venderse dentro de los 90 días, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.</li>
+                    </ul>
+                    <p style={{ marginTop: '10px' }}><strong>Atte: AutoSmart</strong></p>
+                </div>,
+                {
+                    position: "top-center",
+                    autoClose: 100000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    className: "toast-custom",
+                    closeButton: true,
+                }
+            );
             localStorage.setItem("cartel", "true");
         }
     }, []);
@@ -162,7 +170,20 @@ const Subasta = () => {
                         .map((sub) => (
                             <div key={sub._id} className="borde">
                                 <h1 className="titulo">{sub.autos?.nombre}</h1>
-                                <img src={sub.autos?.img} alt={sub.autos?.nombre} className="img-card" />
+                                <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
+                                    {sub.autos?.img?.map((foto, i) => (
+                                        <div key={i}>
+                                            <img
+                                                src={
+                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`    
+                                                    //`http://localhost:3000/uploads/${foto}`
+                                                }
+                                                alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
+                                                className="img-card"
+                                            />
+                                        </div>
+                                    ))}
+                                </Slider>
                                 <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4>
                                 <Cronometro subastaId={sub._id} />
                                 <PriceInput className="price" subastaId={sub._id} />
@@ -182,6 +203,7 @@ const Subasta = () => {
                         <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
+                        <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
                         <button className="close-button" onClick={closeModal}>X</button>
                     </div>
                 </div>

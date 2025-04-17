@@ -1,8 +1,20 @@
+.usuarios-registrados{
+    border: 2px solid black;
+    background-color: #EFFAFD;
+    width: 70%;
+    margin: auto;
+    border-radius: 10px;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
 .usuarios-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    padding: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* mínimo 280px, máximo ocupa 1fr */
+    gap: 1rem;
+    padding: 1rem;
+    justify-items: center;
+    align-items: start;
 }
 
 .usuario-card {
@@ -50,4 +62,14 @@
     padding: 8px 12px;
     border-radius: 8px;
     cursor: pointer;
+}
+
+@media (max-width:575px) {
+    .usuarios-registrados {
+        width: 95%;
+    }
+    .usuarios-grid{
+        display: grid;
+        grid-template-columns: auto;
+    }
 }

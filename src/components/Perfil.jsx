@@ -42,7 +42,7 @@ const Perfil = () => {
         <>
           {/* Sección de información del usuario */}
           <div className='box'>
-          <h1 className='titulo-admin'>Perfil</h1>
+            <h1 className='titulo-admin'>Perfil</h1>
             <p className='font-subasta'><strong>Agencia:</strong> {dataUs.agencia}</p>
             <p className='font-subasta'><strong>DNI:</strong> {dataUs.dni}</p>
             <p className='font-subasta'><strong>Email:</strong> {dataUs.email}</p>
@@ -59,7 +59,14 @@ const Perfil = () => {
                   <div className="borde" key={index}>
                     {oferta.subasta ? (
                       <>
-                        <img src={oferta.subasta.autos.img} alt={oferta.subasta.autos.nombre} className="img-card"/>
+                        <img
+                          src={
+                            `https://martelli-automotes-back-production.up.railway.app/uploads/${sub.autos?.img?.[0]}`
+                            //`http://localhost:3000/uploads/${sub.autos?.img?.[0]}`
+                          }
+                          alt={sub.autos?.nombre}
+                          className='img-card'
+                        />
                         <div className="oferta-content">
                           <h3>{oferta.subasta.autos.nombre}</h3>
                           <p className='font-subasta'>Modelo: {oferta.subasta.autos.modelo}</p>
