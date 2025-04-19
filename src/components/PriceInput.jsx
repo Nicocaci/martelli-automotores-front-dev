@@ -6,7 +6,7 @@ import socket from "../utils/Socket";
 import "../css/Autos.css";
 
 const PriceInput = ({ subastaId }) => {
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(10000);
   const [highestBid, setHighestBid] = useState(0);
   const [highestBidder, setHighestBidder] = useState(null);
   const [message, setMessage] = useState("");
@@ -106,7 +106,7 @@ const PriceInput = ({ subastaId }) => {
         { headers: { "Content-Type": "application/json" } }
       );
       setMessage(" ✅ Oferta enviada con éxito.");
-      setPrice(0); // resetea el input después de ofertar
+      setPrice(10000); // resetea el input después de ofertar
     } catch (error) {
       console.error("Error al ofertar:", error);
       setMessage("❌ Error al enviar la oferta.");

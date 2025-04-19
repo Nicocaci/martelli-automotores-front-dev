@@ -140,12 +140,13 @@ const Subasta = () => {
     const openImageModal = (imgs) => {
         setSelectedAutoImgs(imgs.map(foto =>
             `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+            //`http://localhost:3000/uploads/${foto}`
         ));
         setImageModalOpen(true);
     };
 
     const closeImageModal = () => {
-        setSelectedImage(null);
+        setSelectedAutoImgs([]);
         setImageModalOpen(false);
     };
 
@@ -232,9 +233,9 @@ const Subasta = () => {
                                     <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-grande" />
                                 </div>
                             ))}
-                       <button className="close-button" onClick={closeImageModal}>X</button>
-                       </Slider>
-                        
+
+                        </Slider>
+                        <button className="close-button" onClick={closeImageModal}>X</button>
                     </div>
                 </div>
             )}

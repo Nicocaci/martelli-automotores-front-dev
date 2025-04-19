@@ -1,10 +1,11 @@
-.Toastify__close-button > svg {
+.Toastify__close-button>svg {
   width: 30px !important;
   height: 30px !important;
   margin-left: 140px;
   color: red;
 }
-.Toastify__toast-theme--light{
+
+.Toastify__toast-theme--light {
   font-size: medium;
 }
 
@@ -14,7 +15,8 @@
 /* Define el tamaño del slider y que las imágenes no se apilen */
 .slick-slider {
   width: 100%;
-  max-width: 300px; /* o lo que quieras */
+  max-width: 300px;
+  /* o lo que quieras */
   margin: 0 auto;
 }
 
@@ -27,11 +29,13 @@
 .slick-track {
   display: flex !important;
 }
-.slick-next:before{
+
+.slick-next:before {
   color: black;
 }
-.slick-prev:before{
-  color:black;
+
+.slick-prev:before {
+  color: black;
 }
 
 
@@ -44,6 +48,7 @@
   border-radius: 8px;
   font-size: 16px;
 }
+
 .box {
   border: 2px solid black;
   background-color: #EFFAFD;
@@ -74,7 +79,7 @@
 
 
 
-.titulo{
+.titulo {
   font-family: "Markazi Text", serif;
   font-optical-sizing: auto;
   font-weight: 700;
@@ -82,13 +87,13 @@
   font-size: xx-large;
 }
 
-.font-precio{
+.font-precio {
   font-family: "Alumni Sans Pinstripe", sans-serif;
   font-style: normal;
-  font-size: x-large  ;
+  font-size: x-large;
 }
 
-.font-subasta{
+.font-subasta {
   color: black;
   font-family: "Markazi Text", serif;
   font-size: x-large;
@@ -101,7 +106,7 @@
   border-radius: 8px;
 }
 
-.sub-fin{
+.sub-fin {
   font-size: 1.5rem;
   color: red;
   font-family: "Gruppo", sans-serif;
@@ -109,30 +114,31 @@
   font-style: normal;
 }
 
-.oferta-mas-alta{
+.oferta-mas-alta {
   color: green;
   font-size: large;
   font-family: "Gruppo", sans-serif;
   font-weight: bold;
-  font-style: normal
-;
+  font-style: normal;
 }
 
 /* Botones */
-.input-price{
+.input-price {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.boton-mas{
+.boton-mas {
   width: 30px;
   height: 30px;
   background-color: black;
 }
 
 
-.btn-ofertar, .btn-detalle, .btn-cerrar {
+.btn-ofertar,
+.btn-detalle,
+.btn-cerrar {
   display: block;
   width: 100%;
   padding: 10px;
@@ -177,7 +183,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(5px); /* Efecto de desenfoque */
+  backdrop-filter: blur(5px);
+  /* Efecto de desenfoque */
   background: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
@@ -197,49 +204,54 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+
 .modal-overlay-imagen {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 999;
 }
 
 .modal-image-content {
-  position: relative;
-  background: white;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
   max-width: 90%;
   max-height: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow: hidden;
+  position: relative;
+  
 }
 
 .img-grande {
-  max-width: 100%;
+  width: 100%; 
   max-height: 80vh;
   object-fit: contain;
+  border-radius: 8px;
 }
 
 .close-button {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: crimson;
+  background: rgba(220, 20, 60, 0.9);
   color: white;
   border: none;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -249,6 +261,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -256,13 +269,13 @@
 }
 
 @media(max-width:575px) {
-  .contenedor{
+  .contenedor {
     display: grid;
     grid-template-columns: auto;
   }
 
-  .box{
-      width: 95%;
+  .box {
+    width: 95%;
   }
 
 
