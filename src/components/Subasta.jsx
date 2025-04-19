@@ -232,8 +232,9 @@ const Subasta = () => {
                                     <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-grande" />
                                 </div>
                             ))}
-                        </Slider>
-                        <button className="close-button" onClick={closeImageModal}>X</button>
+                       <button className="close-button" onClick={closeImageModal}>X</button>
+                       </Slider>
+                        
                     </div>
                 </div>
             )}
