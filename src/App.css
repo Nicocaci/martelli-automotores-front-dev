@@ -43,6 +43,10 @@ label {
   margin: 0 auto;
 }
 
+.slick-dots li{
+  margin-bottom: 15px;
+}
+
 textarea {
   resize: none;         /* Evita que el usuario pueda redimensionarlo */
   width: 100%;          /* Que ocupe todo el ancho del contenedor */

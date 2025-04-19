@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "../css/Autos.css";
 import socket from "../utils/Socket.js";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from "react-slick";
 
@@ -19,34 +19,23 @@ const Subasta = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [imageModalOpen, setImageModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [mostrarModalCartel, setMostrarModalCartel] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const cartel = localStorage.getItem("cartel");
-
         if (!cartel) {
-            toast.info(
-                <div style={{ textAlign: 'center' }}>
-                    <h3 style={{ marginBottom: '10px' }}>Bienvenidos</h3>
-                    <ul style={{ textAlign: 'left', margin: '0 auto', maxWidth: '400px' }}>
-                        <li>Deberá ser abonada dentro de los 7 días la oferta ganadora para poder retirar la unidad.</li>
-                        <li>Si el vehículo no se ha vendido dentro de los 90 días de retirado, se procederá a transferir el vehículo al ganador de la subasta.</li>
-                        <li>En caso de venderse dentro de los 90 días, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.</li>
-                    </ul>
-                    <p style={{ marginTop: '10px' }}><strong>Atte: AutoSmart</strong></p>
-                </div>,
-                {
-                    position: "top-center",
-                    autoClose: 100000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    className: "toast-custom",
-                    closeButton: true,
-                }
-            );
-            localStorage.setItem("cartel", "true");
+            setMostrarModalCartel(true);
         }
     }, []);
+
+    const handleAceptarCartel = () => {
+        localStorage.setItem("cartel", "true");
+        setMostrarModalCartel(false);
+    };
+
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
@@ -127,7 +116,6 @@ const Subasta = () => {
         }
     }, [navigate]);
 
-    // Función para abrir el modal con los detalles de la subasta
     const openModal = async (subastaId) => {
         try {
             const response = await axios.get(
@@ -141,7 +129,6 @@ const Subasta = () => {
         }
     };
 
-    // Función para cerrar el modal
     const closeModal = () => {
         setModalOpen(false);
         setModalData(null);
@@ -150,9 +137,33 @@ const Subasta = () => {
     if (loading) return <p>Cargando autos...</p>;
     if (error) return <p>{error}</p>;
 
+    const openImageModal = (imgUrl) => {
+        setSelectedImage(imgUrl);
+        setImageModalOpen(true);
+    };
+
+    const closeImageModal = () => {
+        setSelectedImage(null);
+        setImageModalOpen(false);
+    };
+
     return (
         <div className="box">
             <ToastContainer />
+            {mostrarModalCartel && (
+                <div style={styles.overlay}>
+                    <div style={styles.modal}>
+                        <h2 style={{ marginBottom: '20px' }}>Bienvenidos</h2>
+                        <ul style={{ textAlign: 'left', margin: '0 auto', maxWidth: '400px' }}>
+                            <li>Deberá ser abonada dentro de los 7 días la oferta ganadora para poder retirar la unidad.</li>
+                            <li>Si el vehículo no se ha vendido dentro de los 90 días de retirado, se procederá a transferir el vehículo al ganador de la subasta.</li>
+                            <li>En caso de venderse dentro de los 90 días, se deberá enviar fotocopias del DNI del/los futuro/s titular/es.</li>
+                        </ul>
+                        <p style={{ marginTop: '10px' }}><strong>Atte: AutoSmart</strong></p>
+                        <button style={styles.boton} onClick={handleAceptarCartel}>Aceptar</button>
+                    </div>
+                </div>
+            )}
             <input
                 type="text"
                 placeholder="Buscar auto por nombre..."
@@ -175,11 +186,16 @@ const Subasta = () => {
                                         <div key={i}>
                                             <img
                                                 src={
-                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`    
+                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
                                                     //`http://localhost:3000/uploads/${foto}`
                                                 }
                                                 alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
                                                 className="img-card"
+                                                onClick={() => openImageModal(
+                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+                                                    //`http://localhost:3000/uploads/${foto}`
+                                                )}
+                                                style={{ cursor: 'pointer' }}
                                             />
                                         </div>
                                     ))}
@@ -195,7 +211,6 @@ const Subasta = () => {
                 )}
             </div>
 
-            {/* MODAL */}
             {modalOpen && modalData && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -208,8 +223,51 @@ const Subasta = () => {
                     </div>
                 </div>
             )}
+
+            {imageModalOpen && selectedImage && (
+                <div className="modal-overlay-imagen" onClick={closeImageModal}>
+                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+                        <img src={selectedImage} alt="Foto ampliada" className="img-grande" />
+                        <button className="close-button" onClick={closeImageModal}>X</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
+};
+
+const styles = {
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+    },
+    modal: {
+        backgroundColor: '#fff',
+        padding: '30px',
+        borderRadius: '10px',
+        textAlign: 'center',
+        maxWidth: '600px',
+        width: '90%',
+        boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
+    },
+    boton: {
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: '#007bff',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px',
+        fontSize: '16px',
+        cursor: 'pointer',
+    },
 };
 
 export default Subasta;

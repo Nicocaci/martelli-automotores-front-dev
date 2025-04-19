@@ -81,7 +81,19 @@ const PriceInput = ({ subastaId }) => {
 
   const handleSubmit = async () => {
     if (!userId) {
-      setMessage("Error: Usuario no autenticado.");
+      setMessage("❌ Usuario no autenticado.");
+      return;
+    }
+  
+    if (price <= 0) {
+      setMessage("⚠️ Debés ingresar un monto $$");
+      return;
+    }
+  
+    const newOffer = highestBid + price;
+  
+    if (newOffer === highestBid) {
+      setMessage("⚠️ La oferta debe ser mayor al monto actual.");
       return;
     }
 
@@ -90,13 +102,14 @@ const PriceInput = ({ subastaId }) => {
       await axios.put(
         `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
         //`http://localhost:3000/api/subasta/${subastaId}/ofertadores`,
-        { monto: highestBid + price, usuario: userId },
+        { monto: newOffer, usuario: userId },
         { headers: { "Content-Type": "application/json" } }
       );
       setMessage(" ✅ Oferta enviada con éxito.");
+      setPrice(0); // resetea el input después de ofertar
     } catch (error) {
       console.error("Error al ofertar:", error);
-      setMessage("Error al enviar la oferta.");
+      setMessage("❌ Error al enviar la oferta.");
     }
   };
 

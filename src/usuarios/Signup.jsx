@@ -60,11 +60,33 @@ const Signup = () => {
       navigate("/login");
     } catch (error) {
       if (error.response) {
-        console.error("Error en el registro:", error.response.data.message || "Error desconocido");
+        const errorMessage = error.response.data.message;
+
+        if (errorMessage === "El email ya está registrado") {
+          Swal.fire({
+            title: 'Error',
+            text: 'El correo ya se encuentra registrado.',
+            icon: 'error',
+          });
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: errorMessage || 'Error desconocido durante el registro.',
+            icon: 'error',
+          });
+        }
+
+        console.error("Error en el registro:", errorMessage);
       } else {
         console.error("Error en la solicitud:", error.message);
+        Swal.fire({
+          title: 'Error de red',
+          text: 'No se pudo conectar con el servidor.',
+          icon: 'error',
+        });
       }
     }
+
   }
 
   return (

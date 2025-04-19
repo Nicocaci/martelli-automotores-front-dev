@@ -3,10 +3,14 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Slider from 'react-slick';
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
   const [dataUs, setDataUs] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +40,26 @@ const Perfil = () => {
     }
   }, [usuario]);
 
+
+
+  const openImageModal = (imgUrl) => {
+    setSelectedImage(imgUrl);
+    setImageModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    setImageModalOpen(false);
+  };
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <div className="perfil-container">
       {dataUs ? (
@@ -53,33 +77,57 @@ const Perfil = () => {
           {/* Sección de ofertas hechas */}
           <div className="box">
             <h1 className='titulo-admin'>Ofertas Hechas</h1>
+            <input
+              type="text"
+              placeholder="Buscar por nombre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="input-busqueda"
+            />
             {dataUs.ofertasHechas && dataUs.ofertasHechas.length > 0 ? (
               <div className="contenedor">
-                {dataUs.ofertasHechas.map((oferta, index) => (
-                  <div className="borde" key={index}>
-                    {oferta.subasta ? (
-                      <>
-                        <img
-                          src={
-                            `https://martelli-automotes-back-production.up.railway.app/uploads/${sub.autos?.img?.[0]}`
-                            //`http://localhost:3000/uploads/${sub.autos?.img?.[0]}`
-                          }
-                          alt={sub.autos?.nombre}
-                          className='img-card'
-                        />
-                        <div className="oferta-content">
-                          <h3>{oferta.subasta.autos.nombre}</h3>
-                          <p className='font-subasta'>Modelo: {oferta.subasta.autos.modelo}</p>
-                          <p className='font-subasta'>Motor: {oferta.subasta.autos.motor}</p>
-                          <p className='font-subasta'>Ubicación: {oferta.subasta.autos.ubicacion}</p>
-                          <p className='font-subasta'><strong>Monto de oferta: ${oferta.monto.toLocaleString()}</strong></p>
-                        </div>
-                      </>
-                    ) : (
-                      <p>Esta oferta no tiene una subasta asociada.</p>
-                    )}
-                  </div>
-                ))}
+                {dataUs.ofertasHechas
+                  .filter((oferta) =>
+                    oferta.subasta?.autos?.nombre
+                      ?.toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  )
+                  .map((oferta, index) => (
+                    <div className="borde" key={index}>
+                      {oferta.subasta ? (
+                        <>
+                          <Slider {...sliderSettings}>
+                            {oferta.subasta.autos?.img?.map((foto, i) => (
+                              <div key={i}>
+                                <img
+                                  src={
+                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+                                    //`http://localhost:3000/uploads/${foto}`
+                                  }
+                                  alt={`Foto ${i + 1} de ${oferta.subasta.autos?.nombre}`}
+                                  className="img-card"
+                                  onClick={() => openImageModal(
+                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+                                    //`http://localhost:3000/uploads/${foto}`
+                                  )}
+                                  style={{ cursor: 'pointer' }}
+                                />
+                              </div>
+                            ))}
+                          </Slider>
+                          <div className="oferta-content">
+                            <h3>{oferta.subasta.autos.nombre}</h3>
+                            <p className='font-subasta'>Modelo: {oferta.subasta.autos.modelo}</p>
+                            <p className='font-subasta'>Motor: {oferta.subasta.autos.motor}</p>
+                            <p className='font-subasta'>Ubicación: {oferta.subasta.autos.ubicacion}</p>
+                            <p className='font-subasta'><strong>Monto de oferta: ${oferta.monto.toLocaleString()}</strong></p>
+                          </div>
+                        </>
+                      ) : (
+                        <p>Esta oferta no tiene una subasta asociada.</p>
+                      )}
+                    </div>
+                  ))}
               </div>
             ) : (
               <p>No se han realizado ofertas.</p>
@@ -89,6 +137,16 @@ const Perfil = () => {
       ) : (
         <p>Cargando...</p>
       )}
+
+      {imageModalOpen && selectedImage && (
+        <div className="modal-overlay-imagen" onClick={closeImageModal}>
+          <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+            <img src={selectedImage} alt="Foto ampliada" className="img-grande" />
+            <button className="close-button" onClick={closeImageModal}>X</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
