@@ -20,7 +20,7 @@ const Subasta = () => {
     const [modalData, setModalData] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [imageModalOpen, setImageModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedAutoImgs, setSelectedAutoImgs] = useState([]);
     const [mostrarModalCartel, setMostrarModalCartel] = useState(false);
     const navigate = useNavigate();
 
@@ -137,8 +137,10 @@ const Subasta = () => {
     if (loading) return <p>Cargando autos...</p>;
     if (error) return <p>{error}</p>;
 
-    const openImageModal = (imgUrl) => {
-        setSelectedImage(imgUrl);
+    const openImageModal = (imgs) => {
+        setSelectedAutoImgs(imgs.map(foto =>
+            `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+        ));
         setImageModalOpen(true);
     };
 
@@ -191,10 +193,7 @@ const Subasta = () => {
                                                 }
                                                 alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
                                                 className="img-card"
-                                                onClick={() => openImageModal(
-                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                                    //`http://localhost:3000/uploads/${foto}`
-                                                )}
+                                                onClick={() => openImageModal(sub.autos?.img)}
                                                 style={{ cursor: 'pointer' }}
                                             />
                                         </div>
@@ -224,14 +223,21 @@ const Subasta = () => {
                 </div>
             )}
 
-            {imageModalOpen && selectedImage && (
+            {imageModalOpen && selectedAutoImgs.length > 0 && (
                 <div className="modal-overlay-imagen" onClick={closeImageModal}>
                     <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-                        <img src={selectedImage} alt="Foto ampliada" className="img-grande" />
+                        <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
+                            {selectedAutoImgs.map((imgUrl, idx) => (
+                                <div key={idx}>
+                                    <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-grande" />
+                                </div>
+                            ))}
+                        </Slider>
                         <button className="close-button" onClick={closeImageModal}>X</button>
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
