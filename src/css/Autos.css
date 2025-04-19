@@ -21,7 +21,6 @@
 .slick-slide img {
   object-fit: cover;
   border-radius: 10px;
-  height: 30vh;
 }
 
 /* Para evitar que se vean todas las imágenes apiladas */
