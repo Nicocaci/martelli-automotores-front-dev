@@ -226,7 +226,7 @@ const Subasta = () => {
                         <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                             {selectedAutoImgs.map((imgUrl, idx) => (
                                 <div key={idx}>
-                                    <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-grande" />
+                                    <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-card" />
                                 </div>
                             ))}
 

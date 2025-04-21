@@ -21,13 +21,8 @@
 }
 
 .slick-slide img {
-  object-fit: cover;
   border-radius: 10px;
-}
-
-/* Para evitar que se vean todas las imágenes apiladas */
-.slick-track {
-  display: flex !important;
+  height: 30vh;
 }
 
 .slick-next:before {
@@ -133,6 +128,10 @@
   width: 30px;
   height: 30px;
   background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
 }
 
 
