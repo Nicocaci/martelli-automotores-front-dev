@@ -10,7 +10,7 @@ const Perfil = () => {
   const [dataUs, setDataUs] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [imageModalOpen, setImageModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,13 +42,13 @@ const Perfil = () => {
 
 
 
-  const openImageModal = (imgUrl) => {
-    setSelectedImage(imgUrl);
+  const openImageModal = (imgArray) => {
+    setSelectedImages(imgArray);
     setImageModalOpen(true);
   };
 
   const closeImageModal = () => {
-    setSelectedImage(null);
+    setSelectedImages(null);
     setImageModalOpen(false);
   };
 
@@ -106,10 +106,7 @@ const Perfil = () => {
                                   }
                                   alt={`Foto ${i + 1} de ${oferta.subasta.autos?.nombre}`}
                                   className="img-card"
-                                  onClick={() => openImageModal(
-                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                    //`http://localhost:3000/uploads/${foto}`
-                                  )}
+                                  onClick={() => openImageModal(oferta.subasta.autos?.img)}
                                   style={{ cursor: 'pointer' }}
                                 />
                               </div>
@@ -138,14 +135,27 @@ const Perfil = () => {
         <p>Cargando...</p>
       )}
 
-      {imageModalOpen && selectedImage && (
-        <div className="modal-overlay-imagen" onClick={closeImageModal}>
-          <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImage} alt="Foto ampliada" className="img-grande" />
-            <button className="close-button" onClick={closeImageModal}>X</button>
+{imageModalOpen && selectedImages.length > 0 && (
+  <div className="modal-overlay-imagen" onClick={closeImageModal}>
+    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+      <Slider {...sliderSettings}>
+        {selectedImages.map((img, index) => (
+          <div key={index}>
+            <img
+              src={
+                `https://martelli-automotes-back-production.up.railway.app/uploads/${img}`
+                //`http://localhost:3000/uploads/${img}`
+              }
+              alt={`Imagen ${index + 1}`}
+              className="img-grande"
+            />
           </div>
-        </div>
-      )}
+        ))}
+      </Slider>
+      <button className="close-button" onClick={closeImageModal}>X</button>
+    </div>
+  </div>
+)}
 
     </div>
   );

@@ -19,7 +19,8 @@ const RegistroSubasta = () => {
     const [ubicacionTerm, setUbicacionTerm] = useState("");
     const [mostrarFinalizadas, setMostrarFinalizadas] = useState("todas"); // opciones: "todas", "finalizadas", "activas"
     const [imageModalOpen, setImageModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImageArray, setSelectedImageArray] = useState([]);
+
 
 
     useEffect(() => {
@@ -76,13 +77,13 @@ const RegistroSubasta = () => {
     };
 
 
-    const openImageModal = (imgUrl) => {
-        setSelectedImage(imgUrl);
+    const openImageModal = (imgArray) => {
+        setSelectedImageArray(imgArray);
         setImageModalOpen(true);
     };
 
     const closeImageModal = () => {
-        setSelectedImage(null);
+        setSelectedImageArray(null);
         setImageModalOpen(false);
     };
 
@@ -169,8 +170,10 @@ const RegistroSubasta = () => {
                                                         alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
                                                         className="img-card"
                                                         onClick={() => openImageModal(
-                                                            `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                                            //`http://localhost:3000/uploads/${foto}`
+                                                            sub.autos?.img.map(foto =>
+                                                                `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
+                                                                //`http://localhost:3000/uploads/${foto}`
+                                                            )
                                                         )}
                                                         style={{ cursor: 'pointer' }}
                                                     />
@@ -218,11 +221,16 @@ const RegistroSubasta = () => {
                 </div>
             )}
 
-
-            {imageModalOpen && selectedImage && (
+            {imageModalOpen && selectedImageArray.length > 0 && (
                 <div className="modal-overlay-imagen" onClick={closeImageModal}>
                     <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-                        <img src={selectedImage} alt="Foto ampliada" className="img-grande" />
+                        <Slider {...sliderSettings}>
+                            {selectedImageArray.map((img, index) => (
+                                <div key={index}>
+                                    <img src={img} alt={`Imagen ${index + 1}`} className="img-grande" />
+                                </div>
+                            ))}
+                        </Slider>
                         <button className="close-button" onClick={closeImageModal}>X</button>
                     </div>
                 </div>
