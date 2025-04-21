@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import socket from "../../utils/Socket.js";
+const apiUrl = import.meta.env.VITE_API_URL;  
 
 const Cronometro = ({ subastaId }) => {
     const [subasta, setSubasta] = useState(null);
@@ -13,8 +14,7 @@ const Cronometro = ({ subastaId }) => {
         const fetchSubasta = async () => {
             try {
                 const response = await axios.get(
-                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}`
-                    //`http://localhost:3000/api/subasta/${subastaId}`
+                    `${apiUrl}/subasta/${subastaId}`
                 )
                 const data = response.data;
                 setSubasta(data);
@@ -48,8 +48,7 @@ const Cronometro = ({ subastaId }) => {
             setTiempoRestante(null);
             if (subasta.tiempoExtraRestante === null) {
                 axios.put(
-                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/activar-tiempo-extra`
-                    //`http://localhost:3000/api/subasta/${subastaId}/activar-tiempo-extra`
+                    `${apiUrl}/subasta/${subastaId}/activar-tiempo-extra`
                 )
                 setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
             }
@@ -74,14 +73,12 @@ const Cronometro = ({ subastaId }) => {
                         setSubastaFinalizada(true);
                         // Finaliza la subasta después de que el tiempo extra llega a 0
                         axios.put(
-                            `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`
-                            //`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`
+                            `${apiUrl}/subasta/${subastaId}/reducir-tiempo-extra`
                         )
                         return null;
                     }
                     axios.put(
-                        `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/reducir-tiempo-extra`
-                        //`http://localhost:3000/api/subasta/${subastaId}/reducir-tiempo-extra`
+                        `${apiUrl}/subasta/${subastaId}/reducir-tiempo-extra`
                     );
                     return prev - 1;
                 });
@@ -93,8 +90,7 @@ const Cronometro = ({ subastaId }) => {
     useEffect(() => {
         if (subastaFinalizada) {
             axios.put(
-                `https://martelli-automotes-back-production.up.railway.app/api/subasta/finalizar/${subastaId}`
-                //`http://localhost:3000/api/subasta/finalizar/${subastaId}`
+                `${apiUrl}/subasta/finalizar/${subastaId}`
                 ,{
                 finalizada: true
             });

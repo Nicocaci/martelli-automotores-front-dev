@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import socket from "../utils/Socket";
 import "../css/Autos.css";
+const apiUrl = import.meta.env.VITE_API_URL;  
 
 const PriceInput = ({ subastaId }) => {
   const [price, setPrice] = useState(10000);
@@ -26,8 +27,7 @@ const PriceInput = ({ subastaId }) => {
     const fetchHighestBid = async () => {
       try {
         const response = await axios.get(
-          `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}`)
-          //`http://localhost:3000/api/subasta/${subastaId}`)
+          `${apiUrl}/subasta/${subastaId}`)
           ;
         if (response.data) {
           const { ofertadores, precioInicial } = response.data;
@@ -100,8 +100,7 @@ const PriceInput = ({ subastaId }) => {
 
     try {
       await axios.put(
-        `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}/ofertadores`,
-        //`http://localhost:3000/api/subasta/${subastaId}/ofertadores`,
+        `${apiUrl}/subasta/${subastaId}/ofertadores`,
         { monto: newOffer, usuario: userId },
         { headers: { "Content-Type": "application/json" } }
       );

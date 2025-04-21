@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../../css/FormSubasta.css';
+const apiUrl = import.meta.env.VITE_API_URL; 
+
+
 
 const CrearSubasta = () => {
     const [formData, setFormData] = useState({
@@ -10,12 +13,14 @@ const CrearSubasta = () => {
             motor: "",
             modelo: "",
             ubicacion: "",
-            descripcion:"",
+            descripcion: "",
             img: "",
         },
         precioInicial: "",
         fechaFin: "",
     });
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,13 +65,11 @@ const CrearSubasta = () => {
 
                 try {
                     await axios.post(
-                        "https://martelli-automotes-back-production.up.railway.app/api/subasta"
-                        //"http://localhost:3000/api/subasta"
-                        , formDataToSend, {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    });
+                        `${apiUrl}/subasta`,
+                        formDataToSend,
+                        { headers: { "Content-Type": "multipart/form-data" } }
+                    );
+
 
                     Swal.fire({
                         title: "Subasta creada",
@@ -82,7 +85,7 @@ const CrearSubasta = () => {
                             motor: "",
                             modelo: "",
                             ubicacion: "",
-                            descripcion:"",
+                            descripcion: "",
                             img: "",
                         },
                         precioInicial: "",

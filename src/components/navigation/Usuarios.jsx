@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import '../../css/Usuarios.css'
+import '../../css/Usuarios.css';
+const apiUrl = import.meta.env.VITE_API_URL;  
+
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState(null);
@@ -15,8 +17,7 @@ const Usuarios = () => {
         const fetchUsuarios = async () => {
             try {
                 const response = await axios.get(
-                    "https://martelli-automotes-back-production.up.railway.app/api/usuarios"
-                    //"http://localhost:3000/api/usuarios"
+                    `${apiUrl}/usuarios`
                 );
                 setUsuarios(response.data);
             } catch (error) {
@@ -43,8 +44,7 @@ const Usuarios = () => {
             if (result.isConfirmed) {
                 try {
                     await axios.delete(
-                        `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${id}`
-                        //`http://localhost:3000/api/usuarios/${id}`
+                        `${apiUrl}/usuarios/${id}`
                     );
 
                     Swal.fire("¡Eliminado!", "El usuario ha sido eliminado.", "success");
@@ -64,14 +64,12 @@ const Usuarios = () => {
     const toggleAprobado = async (id) => {
         try {
             await axios.patch(
-                `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${id}/aprobado`
-                //`http://localhost:3000/api/usuarios/${id}/aprobado`
+                `${apiUrl}/usuarios/${id}/aprobado`
             );
 
             // Volver a obtener los usuarios actualizados
             const response = await axios.get(
-                "https://martelli-automotes-back-production.up.railway.app/api/usuarios"
-                //"http://localhost:3000/api/usuarios"
+                `${apiUrl}/usuarios`
             );
             setUsuarios(response.data);
         } catch (error) {

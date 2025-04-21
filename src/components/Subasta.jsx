@@ -9,6 +9,8 @@ import socket from "../utils/Socket.js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from "react-slick";
+const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
@@ -40,8 +42,7 @@ const Subasta = () => {
         const fetchSubastas = async () => {
             try {
                 const response = await axios.get(
-                    "https://martelli-automotes-back-production.up.railway.app/api/subasta"
-                    //"http://localhost:3000/api/subasta"
+                    `${apiUrl}/subasta`
                 );
                 if (Array.isArray(response.data)) {
                     setSubasta(response.data);
@@ -65,8 +66,7 @@ const Subasta = () => {
         for (const sub of subastas) {
             try {
                 const response = await axios.get(
-                    `https://martelli-automotes-back-production.up.railway.app/api/subasta/${sub._id}`
-                    //`http://localhost:3000/api/subasta/${sub._id}`
+                    `${apiUrl}/subasta/${sub._id}`
                 );
                 if (response.data) {
                     const { ofertadores, precioInicial } = response.data;
@@ -86,8 +86,7 @@ const Subasta = () => {
     useEffect(() => {
         socket.on("subastaActualizada", (data) => {
             axios.get(
-                `https://martelli-automotes-back-production.up.railway.app/api/subasta/${data.subastaId}`
-                //`http://localhost:3000/api/subasta/${data.subastaId}`
+                `${apiUrl}/subasta/${data.subastaId}`
             )
                 .then((response) => {
                     const { ofertadores, precioInicial } = response.data;
@@ -119,8 +118,7 @@ const Subasta = () => {
     const openModal = async (subastaId) => {
         try {
             const response = await axios.get(
-                `https://martelli-automotes-back-production.up.railway.app/api/subasta/${subastaId}`
-                //`http://localhost:3000/api/subasta/${subastaId}`
+                `${apiUrl}/subasta/${subastaId}`
             );
             setModalData(response.data);
             setModalOpen(true);
@@ -139,8 +137,7 @@ const Subasta = () => {
 
     const openImageModal = (imgs) => {
         setSelectedAutoImgs(imgs.map(foto =>
-            `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-            //`http://localhost:3000/uploads/${foto}`
+            `${apiUrlUD}/uploads/${foto}`
         ));
         setImageModalOpen(true);
     };
@@ -189,8 +186,7 @@ const Subasta = () => {
                                         <div key={i}>
                                             <img
                                                 src={
-                                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                                    //`http://localhost:3000/uploads/${foto}`
+                                                    `${apiUrlUD}/uploads/${foto}`
                                                 }
                                                 alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
                                                 className="img-card"

@@ -6,7 +6,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../css/CardSubasta.css';
 import Slider from 'react-slick';
-import '../../css/Autos.css'
+import '../../css/Autos.css';
+const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
 
 
 
@@ -23,12 +25,12 @@ const RegistroSubasta = () => {
 
 
 
+
     useEffect(() => {
         const fetchSubastas = async () => {
             try {
                 const response = await axios.get(
-                    "https://martelli-automotes-back-production.up.railway.app/api/subasta"
-                    //"http://localhost:3000/api/subasta"
+                    `${apiUrl}/subasta`
                 );
 
                 if (Array.isArray(response.data)) {
@@ -57,8 +59,7 @@ const RegistroSubasta = () => {
             if (result.isConfirmed) {
                 try {
                     await axios.delete(
-                        `https://martelli-automotes-back-production.up.railway.app/api/subasta/${id}`
-                        //`http://localhost:3000/api/subasta/${id}`
+                        `${apiUrl}/subasta/${id}`
                     );
                     Swal.fire("¡Eliminado!", "La subasta fue eliminada correctamente", "success");
                     setSubastas(subastas.filter((sub) => sub._id !== id));
@@ -164,15 +165,14 @@ const RegistroSubasta = () => {
                                                 <div key={i}>
                                                     <img
                                                         src={
-                                                            `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                                            //`http://localhost:3000/uploads/${foto}`
+                                                            //`${apiUrlUP}/uploads/${foto}`
+                                                            `${apiUrlUD}/uploads/${foto}`
                                                         }
                                                         alt={`Foto ${i + 1} de ${sub.autos?.nombre}`}
                                                         className="img-card"
                                                         onClick={() => openImageModal(
                                                             sub.autos?.img.map(foto =>
-                                                                `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                                                //`http://localhost:3000/uploads/${foto}`
+                                                                `${apiUrlUD}/uploads/${foto}`
                                                             )
                                                         )}
                                                         style={{ cursor: 'pointer' }}

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import '../css/Signup.css';
 import Swal from 'sweetalert2';
+const apiUrl = import.meta.env.VITE_API_URL; 
 
 const Signup = () => {
   const [agencia, setAgencia] = useState("");
@@ -40,8 +41,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/register",
-        //"http://localhost:3000/api/usuarios/register",
+        `${apiUrl}/usuarios/register`,
         { nombre, razonSocial, agencia, dni, telefono, email, password, direccion },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );

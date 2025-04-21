@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
+const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS; 
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
@@ -28,8 +30,7 @@ const Perfil = () => {
       const fetchUsuario = async () => {
         try {
           const response = await axios.get(
-            `https://martelli-automotes-back-production.up.railway.app/api/usuarios/${usuario}`
-            //`http://localhost:3000/api/usuarios/${usuario}`
+            `${apiUrl}/usuarios/${usuario}`
           );
           setDataUs(response.data);
         } catch (error) {
@@ -101,8 +102,7 @@ const Perfil = () => {
                               <div key={i}>
                                 <img
                                   src={
-                                    `https://martelli-automotes-back-production.up.railway.app/uploads/${foto}`
-                                    //`http://localhost:3000/uploads/${foto}`
+                                    `${apiUrlUD}/uploads/${foto}`
                                   }
                                   alt={`Foto ${i + 1} de ${oferta.subasta.autos?.nombre}`}
                                   className="img-card"
@@ -135,27 +135,26 @@ const Perfil = () => {
         <p>Cargando...</p>
       )}
 
-{imageModalOpen && selectedImages.length > 0 && (
-  <div className="modal-overlay-imagen" onClick={closeImageModal}>
-    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-      <Slider {...sliderSettings}>
-        {selectedImages.map((img, index) => (
-          <div key={index}>
-            <img
-              src={
-                `https://martelli-automotes-back-production.up.railway.app/uploads/${img}`
-                //`http://localhost:3000/uploads/${img}`
-              }
-              alt={`Imagen ${index + 1}`}
-              className="img-grande"
-            />
+      {imageModalOpen && selectedImages.length > 0 && (
+        <div className="modal-overlay-imagen" onClick={closeImageModal}>
+          <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+            <Slider {...sliderSettings}>
+              {selectedImages.map((img, index) => (
+                <div key={index}>
+                  <img
+                    src={
+                      `${apiUrlUD}/uploads/${img}`
+                    }
+                    alt={`Imagen ${index + 1}`}
+                    className="img-grande"
+                  />
+                </div>
+              ))}
+            </Slider>
+            <button className="close-button" onClick={closeImageModal}>X</button>
           </div>
-        ))}
-      </Slider>
-      <button className="close-button" onClick={closeImageModal}>X</button>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
     </div>
   );

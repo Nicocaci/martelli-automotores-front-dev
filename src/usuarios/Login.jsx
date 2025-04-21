@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+const apiUrl = import.meta.env.VITE_API_URL; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,8 +35,7 @@ const Login = () => {
       const normalizedEmail = email.trim().toLowerCase(); // ⬅️ normalización
 
       const response = await axios.post(
-        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/login"
-        //"http://localhost:3000/api/usuarios/login"
+        `${apiUrl}/usuarios/login`
         ,
         { email: normalizedEmail, password },
         { headers: { "Content-Type": "application/json" }, withCredentials: true }

@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+const apiUrl = import.meta.env.VITE_API_URL;  
 
 const NavBar = () => {
     const [rol, setRol] = useState(null);
@@ -54,8 +55,7 @@ const NavBar = () => {
             if (result.isConfirmed) {
                 try {
                     await axios.post(
-                        "https://martelli-automotes-back-production.up.railway.app/api/usuarios/logout",
-                        //"http://localhost:3000/api/usuarios/logout",
+                        `${apiUrl}/usuarios/logout`,
                         {},
                         { withCredentials: true }
                     );
