@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/CardSubasta.css';
 import Slider from 'react-slick';
 import '../../css/Autos.css';
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 const apiUrl = import.meta.env.VITE_API_URL;  
 const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
 
@@ -227,7 +229,9 @@ const RegistroSubasta = () => {
                         <Slider {...sliderSettings}>
                             {selectedImageArray.map((img, index) => (
                                 <div key={index}>
+                                    <Zoom>
                                     <img src={img} alt={`Imagen ${index + 1}`} className="img-grande" />
+                                    </Zoom>
                                 </div>
                             ))}
                         </Slider>

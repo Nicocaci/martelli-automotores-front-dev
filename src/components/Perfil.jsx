@@ -4,8 +4,18 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
-const apiUrl = import.meta.env.VITE_API_URL;  
-const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS; 
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
+import socket from "../utils/Socket";
+socket.on("connect", () => {
+  console.log("Socket conectado:", socket.id);
+});
+
+socket.on("disconnect", () => {
+  console.log("Socket desconectado");
+});
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
@@ -24,6 +34,28 @@ const Perfil = () => {
       setUsuario(decoded._id);
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (!usuario) return;
+  
+    const handleNuevaOferta = (data) => {
+      console.log("Evento recibido en frontend:", data, "Usuario local:", usuario);
+      if (data.usuarioId?.toString() === usuario?.toString()) {
+        console.log("🔁 El usuario coincide, actualizando info...");
+        axios
+          .get(`${apiUrl}/usuarios/${usuario}`)
+          .then((res) => setDataUs(res.data))
+          .catch((err) => console.error("Error al actualizar ofertas del perfil:", err));
+      }
+    };
+  
+    socket.on("nueva-oferta-realizada", handleNuevaOferta);
+  
+    return () => {
+      socket.off("nueva-oferta-realizada", handleNuevaOferta);
+    };
+  }, [usuario]);
+  
 
   useEffect(() => {
     if (usuario) {
@@ -62,7 +94,7 @@ const Perfil = () => {
   };
 
   return (
-    <div className="perfil-container">
+    <div className="perfil-container" key={dataUs?._id}>
       {dataUs ? (
         <>
           {/* Sección de información del usuario */}
@@ -101,9 +133,7 @@ const Perfil = () => {
                             {oferta.subasta.autos?.img?.map((foto, i) => (
                               <div key={i}>
                                 <img
-                                  src={
-                                    `${apiUrlUD}/uploads/${foto}`
-                                  }
+                                  src={`${apiUrlUD}/uploads/${foto}`}
                                   alt={`Foto ${i + 1} de ${oferta.subasta.autos?.nombre}`}
                                   className="img-card"
                                   onClick={() => openImageModal(oferta.subasta.autos?.img)}
@@ -118,6 +148,24 @@ const Perfil = () => {
                             <p className='font-subasta'>Motor: {oferta.subasta.autos.motor}</p>
                             <p className='font-subasta'>Ubicación: {oferta.subasta.autos.ubicacion}</p>
                             <p className='font-subasta'><strong>Monto de oferta: ${oferta.monto.toLocaleString()}</strong></p>
+
+                            {(() => {
+                              const ofertadores = oferta.subasta.ofertadores || [];
+                              const maxOferta = ofertadores.reduce((max, curr) =>
+                                curr.monto > max.monto ? curr : max,
+                                ofertadores[0] || {}
+                              );
+
+                              if (!maxOferta.usuario) {
+                                return <p className="font-subasta text-gray-500">No hay ofertas aún.</p>;
+                              }
+
+                              return maxOferta.usuario === usuario ? (
+                                <p className="font-subasta text-green-600 font-bold">✅ ¡Tu oferta es la más alta!</p>
+                              ) : (
+                                <p className="font-subasta text-red-600 font-semibold">❌ Tu oferta fue superada.</p>
+                              );
+                            })()}
                           </div>
                         </>
                       ) : (
@@ -141,13 +189,15 @@ const Perfil = () => {
             <Slider {...sliderSettings}>
               {selectedImages.map((img, index) => (
                 <div key={index}>
-                  <img
-                    src={
-                      `${apiUrlUD}/uploads/${img}`
-                    }
-                    alt={`Imagen ${index + 1}`}
-                    className="img-grande"
-                  />
+                  <Zoom>
+                    <img
+                      src={
+                        `${apiUrlUD}/uploads/${img}`
+                      }
+                      alt={`Imagen ${index + 1}`}
+                      className="img-grande"
+                    />
+                  </Zoom>
                 </div>
               ))}
             </Slider>

@@ -96,6 +96,10 @@ const PriceInput = ({ subastaId }) => {
       setMessage("⚠️ La oferta debe ser mayor al monto actual.");
       return;
     }
+    if (highestBidder && userId === highestBidder._id) {
+      setMessage("❌ Ya sos el ofertante más alto.");
+      return;
+    }
 
 
     try {
