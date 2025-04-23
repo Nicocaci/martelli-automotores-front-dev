@@ -1,8 +1,9 @@
 import { io } from "socket.io-client";
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
+
 
 const socket = io(
-                    "https://martelli-automotes-back-production.up.railway.app"
-                    //"http://localhost:3000"
+                    `${apiUrlUD}`
                 );
 
 export default socket;

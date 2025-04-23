@@ -9,8 +9,10 @@ import socket from "../utils/Socket.js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from "react-slick";
-const apiUrl = import.meta.env.VITE_API_URL;  
-const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;
 
 const Subasta = () => {
     const [subasta, setSubasta] = useState([]);
@@ -226,7 +228,13 @@ const Subasta = () => {
                         <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                             {selectedAutoImgs.map((imgUrl, idx) => (
                                 <div key={idx}>
-                                    <img src={imgUrl} alt={`Foto ampliada ${idx + 1}`} className="img-card" />
+                                    <Zoom>
+                                        <img
+                                            src={imgUrl}
+                                            alt={`Foto ampliada ${idx + 1}`}
+                                            className="img-grande"
+                                        />
+                                    </Zoom>
                                 </div>
                             ))}
 
@@ -238,40 +246,6 @@ const Subasta = () => {
 
         </div>
     );
-};
-
-const styles = {
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-    },
-    modal: {
-        backgroundColor: '#fff',
-        padding: '30px',
-        borderRadius: '10px',
-        textAlign: 'center',
-        maxWidth: '600px',
-        width: '90%',
-        boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)',
-    },
-    boton: {
-        marginTop: '20px',
-        padding: '10px 20px',
-        backgroundColor: '#007bff',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '5px',
-        fontSize: '16px',
-        cursor: 'pointer',
-    },
 };
 
 export default Subasta;
