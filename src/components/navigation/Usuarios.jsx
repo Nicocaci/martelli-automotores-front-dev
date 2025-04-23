@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../../css/Usuarios.css';
-const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
 const Usuarios = () => {
@@ -11,6 +11,17 @@ const Usuarios = () => {
     const [filtroEmpresa, setFiltroEmpresa] = useState('');
     const [filtroDNI, setFiltroDNI] = useState('');
     const [filtroAprobado, setFiltroAprobado] = useState('todos'); // puede ser 'todos', 'aprobados' o 'desaprobados'
+    const [usuarioEnEdicion, setUsuarioEnEdicion] = useState(null);
+    const [formEdicion, setFormEdicion] = useState({
+        nombre: '',
+        agencia: '',
+        razonSocial: '',
+        dni: '',
+        telefono: '',
+        direccion: '',
+        email: '',
+        rol: ''
+    });
 
 
     useEffect(() => {
@@ -61,6 +72,11 @@ const Usuarios = () => {
         });
     };
 
+    const handleEditarClick = (usuario) => {
+        setUsuarioEnEdicion(usuario);
+        setFormEdicion({ ...usuario }); // copiás los datos para editarlos
+    };
+
     const toggleAprobado = async (id) => {
         try {
             await axios.patch(
@@ -74,6 +90,24 @@ const Usuarios = () => {
             setUsuarios(response.data);
         } catch (error) {
             console.error("Error al cambiar el estado de aprobado:", error);
+        }
+    };
+
+    const guardarEdicion = async () => {
+        try {
+            const response = await axios.put(`${apiUrl}/usuarios/${usuarioEnEdicion._id}`, formEdicion);
+            const usuarioActualizado = response.data;
+
+            // Reemplazamos en el estado local
+            setUsuarios((prev) =>
+                prev.map((u) => (u._id === usuarioActualizado._id ? usuarioActualizado : u))
+            );
+
+            Swal.fire("¡Editado!", "El usuario fue actualizado correctamente", "success");
+            setUsuarioEnEdicion(null);
+        } catch (error) {
+            console.error("Error al actualizar usuario:", error);
+            Swal.fire("Error", "No se pudo actualizar el usuario", "error");
         }
     };
 
@@ -147,6 +181,9 @@ const Usuarios = () => {
                                             <button className="btn-eliminar" onClick={() => handleDeleteUsuario(usuario._id)}>
                                                 Eliminar
                                             </button>
+                                            <button className='btn-editar' onClick={() => handleEditarClick(usuario)}>
+                                                Editar
+                                            </button>
                                         </div>
                                     </div>
                                 ))}
@@ -162,6 +199,32 @@ const Usuarios = () => {
                 <p>Cargando usuarios...</p>
             )}
 
+            {usuarioEnEdicion && (
+                <div className="modal-overlay" onClick={() => setUsuarioEnEdicion(null)}>
+                    <div className="form-edicion-usuario" onClick={(e) => e.stopPropagation()}>
+                        <h3>Editar Usuario</h3>
+                        <input type="text" placeholder="Nombre" value={formEdicion.nombre}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, nombre: e.target.value })} />
+                        <input type="text" placeholder="Empresa" value={formEdicion.agencia}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, agencia: e.target.value })} />
+                        <input type="text" placeholder="Razón Social" value={formEdicion.razonSocial}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, razonSocial: e.target.value })} />
+                        <input type="text" placeholder="DNI" value={formEdicion.dni}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, dni: e.target.value })} />
+                        <input type="text" placeholder="Teléfono" value={formEdicion.telefono}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, telefono: e.target.value })} />
+                        <input type="text" placeholder="Dirección" value={formEdicion.direccion}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, direccion: e.target.value })} />
+                        <input type="email" placeholder="Email" value={formEdicion.email}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, email: e.target.value })} />
+                        <input type="text" placeholder="Rol" value={formEdicion.rol}
+                            onChange={(e) => setFormEdicion({ ...formEdicion, rol: e.target.value })} />
+
+                        <button onClick={guardarEdicion}>Guardar cambios</button>
+                        <button onClick={() => setUsuarioEnEdicion(null)}>Cancelar</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

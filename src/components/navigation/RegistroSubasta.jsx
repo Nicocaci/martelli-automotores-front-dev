@@ -9,8 +9,8 @@ import Slider from 'react-slick';
 import '../../css/Autos.css';
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
-const apiUrl = import.meta.env.VITE_API_URL;  
-const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;  
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;
 
 
 
@@ -24,6 +24,16 @@ const RegistroSubasta = () => {
     const [mostrarFinalizadas, setMostrarFinalizadas] = useState("todas"); // opciones: "todas", "finalizadas", "activas"
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedImageArray, setSelectedImageArray] = useState([]);
+    const [subastaEditando, setSubastaEditando] = useState(null);
+    const [formEditData, setFormEditData] = useState({
+        nombre: '',
+        modelo: '',
+        motor: '',
+        ubicacion: '',
+        descripcion: '',
+        precioInicial: '',
+        fechaFin: '',
+    });
 
 
 
@@ -88,6 +98,53 @@ const RegistroSubasta = () => {
     const closeImageModal = () => {
         setSelectedImageArray(null);
         setImageModalOpen(false);
+    };
+
+    const handleEditClick = (subasta) => {
+        setSubastaEditando(subasta);
+        setFormEditData({
+            nombre: subasta.autos.nombre,
+            modelo: subasta.autos.modelo,
+            motor: subasta.autos.motor,
+            ubicacion: subasta.autos.ubicacion,
+            descripcion: subasta.autos.descripcion,
+            precioInicial: subasta.precioInicial,
+            fechaFin: subasta.fechaFin.slice(0, 16), // Para input type="datetime-local"
+        });
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormEditData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            const updatedData = {
+                autos: {
+                    nombre: formEditData.nombre,
+                    modelo: formEditData.modelo,
+                    motor: formEditData.motor,
+                    ubicacion: formEditData.ubicacion,
+                    descripcion: formEditData.descripcion,
+                    img: subastaEditando.autos.img
+                },
+                precioInicial: parseFloat(formEditData.precioInicial),
+                fechaFin: new Date(formEditData.fechaFin)
+            };
+
+            await axios.put(`${apiUrl}/subasta/${subastaEditando._id}`, updatedData);
+
+            setSubastas(prev =>
+                prev.map(s => s._id === subastaEditando._id ? { ...s, ...updatedData } : s)
+            );
+
+            setSubastaEditando(null);
+            Swal.fire("Actualizado", "La subasta se editó correctamente", "success");
+        } catch (error) {
+            console.error("Error al actualizar la subasta:", error);
+            Swal.fire("Error", "No se pudo actualizar la subasta", "error");
+        }
     };
 
     const sliderSettings = {
@@ -188,6 +245,7 @@ const RegistroSubasta = () => {
                                         <Ganador subastaId={sub._id} />
                                         <button onClick={() => handleShowOfertadores(sub)}>Detalles de Subastadores</button>
                                         <button onClick={() => handleDelete(sub._id)}>Eliminar Subasta</button>
+                                        <button onClick={() => handleEditClick(sub)}>Editar</button>
                                     </div>
                                 );
                             })
@@ -230,12 +288,31 @@ const RegistroSubasta = () => {
                             {selectedImageArray.map((img, index) => (
                                 <div key={index}>
                                     <Zoom>
-                                    <img src={img} alt={`Imagen ${index + 1}`} className="img-grande" />
+                                        <img src={img} alt={`Imagen ${index + 1}`} className="img-grande" />
                                     </Zoom>
                                 </div>
                             ))}
                         </Slider>
                         <button className="close-button" onClick={closeImageModal}>X</button>
+                    </div>
+                </div>
+            )}
+
+            {subastaEditando && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2 className='font-subasta'>Editar Subasta</h2>
+                        <input name="nombre" value={formEditData.nombre} onChange={handleInputChange} placeholder="Nombre" />
+                        <input name="modelo" value={formEditData.modelo} onChange={handleInputChange} placeholder="Modelo" />
+                        <input name="motor" value={formEditData.motor} onChange={handleInputChange} placeholder="Motor" />
+                        <input name="ubicacion" value={formEditData.ubicacion} onChange={handleInputChange} placeholder="Ubicación" />
+                        <textarea name="descripcion" value={formEditData.descripcion} onChange={handleInputChange} placeholder="Descripción" />
+                        <input name="precioInicial" type="number" value={formEditData.precioInicial} onChange={handleInputChange} placeholder="Precio Inicial" />
+                        <input name="fechaFin" type="datetime-local" value={formEditData.fechaFin} onChange={handleInputChange} />
+                        <div className="usuario-buttons">
+                            <button className="btn-aprobar" onClick={handleSaveEdit}>Guardar</button>
+                            <button className="btn-eliminar" onClick={() => setSubastaEditando(null)}>Cancelar</button>
+                        </div>
                     </div>
                 </div>
             )}
