@@ -157,9 +157,14 @@ const Subasta = () => {
         setImageModalOpen(true);
     };
 
-    const closeImageModal = () => {
-        setSelectedAutoImgs([]);
-        setImageModalOpen(false);
+    const closeImageModal = (e) => {
+        if (e.target === e.currentTarget) {
+            setSelectedAutoImgs([]);
+            setImageModalOpen(false);
+        }
+    };
+    const preventModalClose = (e) => {
+        e.stopPropagation();  // Evita que el clic dentro del contenido de la imagen cierre el modal
     };
 
 
@@ -238,7 +243,7 @@ const Subasta = () => {
 
             {imageModalOpen && selectedAutoImgs.length > 0 && (
                 <div className="modal-overlay-imagen" onClick={closeImageModal}>
-                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-image-content" onClick={preventModalClose}>
                         <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                             {selectedAutoImgs.map((imgUrl, idx) => (
                                 <div key={idx}>
