@@ -149,6 +149,18 @@ const Subasta = () => {
         setImageModalOpen(false);
     };
 
+    useEffect(() => {
+        if(imageModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+
+        return () => {
+            document.body.style.overflow = 'auto';
+        }
+    }, [imageModalOpen]);
+
     return (
         <div className="box">
             <ToastContainer />

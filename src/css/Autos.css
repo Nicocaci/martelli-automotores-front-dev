@@ -215,6 +215,7 @@
   justify-content: center;
   align-items: center;
   z-index: 999;
+  touch-action: none;
 }
 
 .modal-image-content {
@@ -225,6 +226,7 @@
   max-height: 90%;
   overflow: hidden;
   position: relative;
+  touch-action: auto;
   
 }
 
