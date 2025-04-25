@@ -87,18 +87,6 @@ const Subasta = () => {
 
 
     useEffect(() => {
-        if (imageModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-
-        return () => {
-            document.body.style.overflow = 'auto';
-        }
-    }, [imageModalOpen]);
-
-    useEffect(() => {
         const disableZoom = (e) => {
             e.preventDefault();
         };
