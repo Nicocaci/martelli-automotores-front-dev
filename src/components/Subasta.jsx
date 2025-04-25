@@ -85,6 +85,19 @@ const Subasta = () => {
         setHighestBids(bids);
     };
 
+    
+    useEffect(() => {
+        if(imageModalOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
+        }
+
+        return () => {
+            document.body.style.overflow = 'auto';
+        }
+    }, [imageModalOpen]);
+
     useEffect(() => {
         socket.on("subastaActualizada", (data) => {
             axios.get(
@@ -149,17 +162,6 @@ const Subasta = () => {
         setImageModalOpen(false);
     };
 
-    useEffect(() => {
-        if(imageModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
-
-        return () => {
-            document.body.style.overflow = 'auto';
-        }
-    }, [imageModalOpen]);
 
     return (
         <div className="box">
