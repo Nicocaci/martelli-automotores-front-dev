@@ -85,9 +85,9 @@ const Subasta = () => {
         setHighestBids(bids);
     };
 
-    
+
     useEffect(() => {
-        if(imageModalOpen) {
+        if (imageModalOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
@@ -96,6 +96,31 @@ const Subasta = () => {
         return () => {
             document.body.style.overflow = 'auto';
         }
+    }, [imageModalOpen]);
+
+    useEffect(() => {
+        const disableZoom = (e) => {
+            e.preventDefault();
+        };
+
+        if (imageModalOpen) {
+            document.body.style.overflow = 'hidden';
+
+            // Deshabilitar pinch-to-zoom y doble tap zoom
+            document.addEventListener('touchmove', disableZoom, { passive: false });
+            document.addEventListener('gesturestart', disableZoom);
+        } else {
+            document.body.style.overflow = 'auto';
+
+            document.removeEventListener('touchmove', disableZoom);
+            document.removeEventListener('gesturestart', disableZoom);
+        }
+
+        return () => {
+            document.body.style.overflow = 'auto';
+            document.removeEventListener('touchmove', disableZoom);
+            document.removeEventListener('gesturestart', disableZoom);
+        };
     }, [imageModalOpen]);
 
     useEffect(() => {
@@ -269,33 +294,33 @@ const Subasta = () => {
 
 const styles = {
     overlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000
     },
     modal: {
-      backgroundColor: 'white',
-      padding: '2rem',
-      borderRadius: '10px',
-      textAlign: 'center',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+        backgroundColor: 'white',
+        padding: '2rem',
+        borderRadius: '10px',
+        textAlign: 'center',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
     },
     boton: {
-      marginTop: '20px',
-      padding: '10px 20px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '5px',
-      cursor: 'pointer'
+        marginTop: '20px',
+        padding: '10px 20px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer'
     }
-  };
-  
+};
+
 export default Subasta;
