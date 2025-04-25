@@ -273,3 +273,15 @@ body.modal-open {
 
 
 }
+
+@media(max-width:370px) {
+  .borde{
+    width: 90% ;
+  }
+}
+
+@media(max-width:340px) {
+  .borde{
+    width: 85% ;
+  }
+}

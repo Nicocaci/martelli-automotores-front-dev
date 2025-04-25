@@ -144,6 +144,11 @@ const Subasta = () => {
         }
     };
 
+    const openPeritajeModal = async (peritajes) => {
+        setSelectedAutoImgs(peritajes.map(foto => `${apiUrlUD}/uploads/${foto}`));
+        setImageModalOpen(true);
+    }
+
     const closeModal = () => {
         setModalOpen(false);
         setModalData(null);
@@ -233,6 +238,7 @@ const Subasta = () => {
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
                         <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
+                        <button onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>
                         <button className="close-button" onClick={closeModal}>X</button>
                     </div>
                 </div>
@@ -240,7 +246,7 @@ const Subasta = () => {
 
             {imageModalOpen && selectedAutoImgs.length > 0 && (
                 <div className="modal-overlay-imagen" onClick={closeImageModal}>
-                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>>
+                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
                         <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                             {selectedAutoImgs.map((imgUrl, idx) => (
                                 <div key={idx}>

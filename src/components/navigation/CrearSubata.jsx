@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import '../../css/FormSubasta.css';
-const apiUrl = import.meta.env.VITE_API_URL; 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
 
@@ -15,6 +15,7 @@ const CrearSubasta = () => {
             ubicacion: "",
             descripcion: "",
             img: "",
+            peritaje: "",
         },
         precioInicial: "",
         fechaFin: "",
@@ -59,6 +60,9 @@ const CrearSubasta = () => {
                     formDataToSend.append("img", file); // ¡el campo debe tener el mismo nombre que espera Multer!
                 });
 
+                formData.autos.peritaje.forEach((file) => {
+                    formDataToSend.append("peritaje", file);
+                });
                 formDataToSend.append("precioInicial", formData.precioInicial);
                 formDataToSend.append("fechaFin", formData.fechaFin);
 
@@ -87,6 +91,7 @@ const CrearSubasta = () => {
                             ubicacion: "",
                             descripcion: "",
                             img: "",
+                            peritaje: "",
                         },
                         precioInicial: "",
                         fechaFin: "",
@@ -149,6 +154,19 @@ const CrearSubasta = () => {
                     setFormData({
                         ...formData,
                         autos: { ...formData.autos, img: Array.from(e.target.files) },
+                    })
+                }
+                required
+            />
+            <input
+                type="file"
+                name="peritaje"
+                accept="image/*"
+                multiple
+                onChange={(e) =>
+                    setFormData({
+                        ...formData,
+                        autos: { ...formData.autos, peritaje: Array.from(e.target.files) },
                     })
                 }
                 required
