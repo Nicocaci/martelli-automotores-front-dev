@@ -226,7 +226,7 @@
   max-height: 90%;
   overflow: hidden;
   position: relative;
-  touch-action: auto;
+  touch-action: pinch-zoom;
   
 }
 
