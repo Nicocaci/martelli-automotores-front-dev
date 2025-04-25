@@ -92,20 +92,13 @@ const Subasta = () => {
 
 
 
-    
     useEffect(() => {
-      const isHome = location.pathname === "/";
-    
-      if (imageModalOpen && isHome) {
-        document.body.classList.add("modal-open");
-      } else {
-        document.body.classList.remove("modal-open");
-      }
-    
-      return () => {
-        document.body.classList.remove("modal-open");
-      };
-    }, [imageModalOpen, location]);
+        if (!imageModalOpen) {
+          document.body.classList.remove("modal-open");
+          document.documentElement.style.scrollBehavior = "auto"; // por si hay animación
+          window.scrollTo({ top: 0 }); // vuelve a top, útil en mobile
+        }
+      }, [imageModalOpen]);
 
     useEffect(() => {
         socket.on("subastaActualizada", (data) => {
@@ -166,16 +159,11 @@ const Subasta = () => {
         setImageModalOpen(true);
     };
 
-    const closeImageModal = (e) => {
-        if (e.target === e.currentTarget) {
+    const closeImageModal = () => {
             setSelectedAutoImgs([]);
             setImageModalOpen(false);
-        }
-    };
-    const preventModalClose = (e) => {
-        e.stopPropagation();  // Evita que el clic dentro del contenido de la imagen cierre el modal
-    };
 
+    };
 
     return (
         <div className="box">
