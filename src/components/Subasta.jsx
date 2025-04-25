@@ -9,7 +9,11 @@ import socket from "../utils/Socket.js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Slider from "react-slick";
-import Zoom from 'react-medium-image-zoom'
+import Zoom from 'react-medium-image-zoom';
+import { useLocation } from "react-router-dom";
+
+
+
 import 'react-medium-image-zoom/dist/styles.css'
 const apiUrl = import.meta.env.VITE_API_URL;
 const apiUrlUD = import.meta.env.VITE_API_URL_UPLOADS;
@@ -27,6 +31,7 @@ const Subasta = () => {
     const [selectedAutoImgs, setSelectedAutoImgs] = useState([]);
     const [mostrarModalCartel, setMostrarModalCartel] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const cartel = localStorage.getItem("cartel");
@@ -86,30 +91,21 @@ const Subasta = () => {
     };
 
 
+
+    
     useEffect(() => {
-        const disableZoom = (e) => {
-            e.preventDefault();
-        };
-
-        if (imageModalOpen) {
-            document.body.style.overflow = 'hidden';
-
-            // Deshabilitar pinch-to-zoom y doble tap zoom
-            document.addEventListener('touchmove', disableZoom, { passive: false });
-            document.addEventListener('gesturestart', disableZoom);
-        } else {
-            document.body.style.overflow = 'auto';
-
-            document.removeEventListener('touchmove', disableZoom);
-            document.removeEventListener('gesturestart', disableZoom);
-        }
-
-        return () => {
-            document.body.style.overflow = 'auto';
-            document.removeEventListener('touchmove', disableZoom);
-            document.removeEventListener('gesturestart', disableZoom);
-        };
-    }, [imageModalOpen]);
+      const isHome = location.pathname === "/";
+    
+      if (imageModalOpen && isHome) {
+        document.body.classList.add("modal-open");
+      } else {
+        document.body.classList.remove("modal-open");
+      }
+    
+      return () => {
+        document.body.classList.remove("modal-open");
+      };
+    }, [imageModalOpen, location]);
 
     useEffect(() => {
         socket.on("subastaActualizada", (data) => {
