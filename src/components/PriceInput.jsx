@@ -12,6 +12,7 @@ const PriceInput = ({ subastaId }) => {
   const [highestBidder, setHighestBidder] = useState(null);
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState(null);
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     const token = Cookies.get("acces_token");
@@ -30,12 +31,13 @@ const PriceInput = ({ subastaId }) => {
           `${apiUrl}/subasta/${subastaId}`)
           ;
         if (response.data) {
-          const { ofertadores, precioInicial } = response.data;
+          const { ofertadores, precioInicial, finalizada } = response.data;
     
           if (ofertadores.length > 0) {
             const highestOffer = ofertadores.reduce((max, o) => (o.monto > max.monto ? o : max), ofertadores[0]);
             setHighestBid(highestOffer.monto);
             setHighestBidder(highestOffer.usuario);
+            setIsFinished(finalizada);
             
           } else {
             setHighestBid(precioInicial);
@@ -84,6 +86,12 @@ const PriceInput = ({ subastaId }) => {
       setMessage("❌ Usuario no autenticado.");
       return;
     }
+
+    if(isFinished) {
+      setMessage("⚠️ La Subasta ya finalizó");
+      return;
+    }
+
   
     if (price <= 0) {
       setMessage("⚠️ Debés ingresar un monto $$");
