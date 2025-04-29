@@ -203,7 +203,7 @@ const Subasta = () => {
                         )
                         .map((sub) => (
                             <div key={sub._id} className="borde">
-                                <h1 className="titulo">{sub.autos?.nombre}</h1>
+                                
                                 <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                                     {sub.autos?.img?.map((foto, i) => (
                                         <div key={i}>
@@ -219,7 +219,8 @@ const Subasta = () => {
                                         </div>
                                     ))}
                                 </Slider>
-                                <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4>
+                                <h1 className="titulo">{sub.autos?.nombre}</h1>
+                                {/* <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4> */}
                                 <Cronometro subastaId={sub._id} />
                                 <PriceInput className="price" subastaId={sub._id} />
                                 <button className="button" onClick={() => openModal(sub._id)}>Ver detalle</button>
@@ -234,8 +235,9 @@ const Subasta = () => {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2 className="titulo">{modalData.autos?.nombre}</h2>
-                        <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
+                        <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
+                        <p className="font-subasta"><strong>Kilómetros:</strong> {modalData.autos?.kilometros}KM</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
                         <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
                         <button onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>

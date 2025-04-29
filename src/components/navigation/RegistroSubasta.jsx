@@ -29,6 +29,7 @@ const RegistroSubasta = () => {
         nombre: '',
         modelo: '',
         motor: '',
+        kilometros:"",
         ubicacion: '',
         descripcion: '',
         precioInicial: '',
@@ -104,8 +105,9 @@ const RegistroSubasta = () => {
         setSubastaEditando(subasta);
         setFormEditData({
             nombre: subasta.autos.nombre,
-            modelo: subasta.autos.modelo,
             motor: subasta.autos.motor,
+            modelo: subasta.autos.modelo,
+            kilometros: subasta.autos.kilometros,
             ubicacion: subasta.autos.ubicacion,
             descripcion: subasta.autos.descripcion,
             precioInicial: subasta.precioInicial,
@@ -123,8 +125,9 @@ const RegistroSubasta = () => {
             const updatedData = {
                 autos: {
                     nombre: formEditData.nombre,
-                    modelo: formEditData.modelo,
                     motor: formEditData.motor,
+                    modelo: formEditData.modelo,
+                    kilometros: formEditData.kilometros,
                     ubicacion: formEditData.ubicacion,
                     descripcion: formEditData.descripcion,
                     img: subastaEditando.autos.img
@@ -218,7 +221,6 @@ const RegistroSubasta = () => {
 
                                 return (
                                     <div key={sub._id} className='borde'>
-                                        <h1 className='titulo'>{sub.autos?.nombre}</h1>
                                         <Slider {...sliderSettings}>
                                             {sub.autos?.img?.map((foto, i) => (
                                                 <div key={i}>
@@ -239,6 +241,7 @@ const RegistroSubasta = () => {
                                                 </div>
                                             ))}
                                         </Slider>
+                                        <h1 className='titulo'>{sub.autos?.nombre}</h1>
                                         <h4 className='font-subasta'>Precio Inicial: ${sub.precioInicial.toLocaleString()}</h4>
                                         <h4 className='font-subasta'>Oferta más alta: ${maxOferta.toLocaleString()}</h4>
                                         <Cronometro subastaId={sub._id} />
@@ -303,8 +306,9 @@ const RegistroSubasta = () => {
                     <div className="modal-content">
                         <h2 className='font-subasta'>Editar Subasta</h2>
                         <input name="nombre" value={formEditData.nombre} onChange={handleInputChange} placeholder="Nombre" />
-                        <input name="modelo" value={formEditData.modelo} onChange={handleInputChange} placeholder="Modelo" />
                         <input name="motor" value={formEditData.motor} onChange={handleInputChange} placeholder="Motor" />
+                        <input name="modelo" value={formEditData.modelo} onChange={handleInputChange} placeholder="Modelo" />
+                        <input name="kilometros" value={formEditData.kilometros} onChange={handleInputChange} placeholder="kilometross" />
                         <input name="ubicacion" value={formEditData.ubicacion} onChange={handleInputChange} placeholder="Ubicación" />
                         <textarea name="descripcion" value={formEditData.descripcion} onChange={handleInputChange} placeholder="Descripción" />
                         <input name="precioInicial" type="number" value={formEditData.precioInicial} onChange={handleInputChange} placeholder="Precio Inicial" />

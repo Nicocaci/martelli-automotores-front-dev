@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import socket from "../utils/Socket";
 import "../css/Autos.css";
-const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const PriceInput = ({ subastaId }) => {
   const [price, setPrice] = useState(10000);
@@ -32,30 +32,30 @@ const PriceInput = ({ subastaId }) => {
           ;
         if (response.data) {
           const { ofertadores, precioInicial, finalizada } = response.data;
-    
+          setIsFinished(finalizada); 
           if (ofertadores.length > 0) {
             const highestOffer = ofertadores.reduce((max, o) => (o.monto > max.monto ? o : max), ofertadores[0]);
             setHighestBid(highestOffer.monto);
             setHighestBidder(highestOffer.usuario);
-            setIsFinished(finalizada);
-            
+
           } else {
             setHighestBid(precioInicial);
             setHighestBidder(null);
-            
+
           }
         }
       } catch (error) {
         console.error("Error al obtener la oferta más alta:", error);
       }
     };
-    
+
     fetchHighestBid();
 
     const handleSubastaActualizada = (data) => {
-      if (data.subastaId === subastaId && data.highestBid && data.highestBidder) {
-        setHighestBid(data.highestBid);
-        setHighestBidder(data.highestBidder);
+      if (data.subastaId === subastaId) {
+        if (data.highestBid) setHighestBid(data.highestBid);
+        if (data.highestBidder) setHighestBidder(data.highestBidder);
+        if (typeof data.finalizada !== "undefined") setIsFinished(data.finalizada);
       }
     };
 
@@ -87,19 +87,27 @@ const PriceInput = ({ subastaId }) => {
       return;
     }
 
-    if(isFinished) {
-      setMessage("⚠️ La Subasta ya finalizó");
+    try {
+      const res = await axios.get(`${apiUrl}/subasta/${subastaId}`);
+      if (res.data.finalizada) {
+        setIsFinished(true);
+        setMessage("⚠️ La Subasta ya finalizó");
+        return;
+      }
+    } catch (err) {
+      console.error("Error verificando si la subasta finalizó:", err);
+      setMessage("❌ Error al verificar el estado de la subasta.");
       return;
     }
 
-  
+
     if (price <= 0) {
       setMessage("⚠️ Debés ingresar un monto $$");
       return;
     }
-  
+
     const newOffer = highestBid + price;
-  
+
     if (newOffer === highestBid) {
       setMessage("⚠️ La oferta debe ser mayor al monto actual.");
       return;
@@ -130,9 +138,12 @@ const PriceInput = ({ subastaId }) => {
     <div className="font-precio">
       <p className="font-subasta">
         {userId && highestBidder && userId === highestBidder._id ? (
-          <span className="oferta-mas-alta">🏆¡Tu subasta es la más alta!🏆</span>
+          <>
+            <span className="oferta-mas-alta">🏆¡Tu oferta es la más alta!🏆</span><br />
+            Precio: <span className="font-subasta">${formatPrice(highestBid)}</span>
+          </>
         ) : (
-          <>Oferta más alta: <span className="font-subasta">${formatPrice(highestBid)}</span></>
+          <>Precio: <span className="font-subasta">${formatPrice(highestBid)}</span></>
         )}
       </p>
       <div className="input-price">
@@ -152,7 +163,7 @@ const PriceInput = ({ subastaId }) => {
         Ofertar en: <span className="font-bold text-blue-600">${formatPrice(highestBid + price)}</span>
       </p>
       <div className="flex gap-4">
-        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Ofertar Subasta</button>
+        <button onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">OFERTAR</button>
       </div>
       {message && <p className="font-subasta">{message}</p>}
     </div>

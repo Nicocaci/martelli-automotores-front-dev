@@ -12,6 +12,7 @@ const CrearSubasta = () => {
             nombre: "",
             motor: "",
             modelo: "",
+            kilometros: "",
             ubicacion: "",
             descripcion: "",
             img: "",
@@ -52,6 +53,7 @@ const CrearSubasta = () => {
                 formDataToSend.append("nombre", formData.autos.nombre);
                 formDataToSend.append("motor", formData.autos.motor);
                 formDataToSend.append("modelo", formData.autos.modelo);
+                formDataToSend.append("kilometros", formData.autos.kilometros);
                 formDataToSend.append("ubicacion", formData.autos.ubicacion);
                 formDataToSend.append("descripcion", formData.autos.descripcion);
 
@@ -88,6 +90,7 @@ const CrearSubasta = () => {
                             nombre: "",
                             motor: "",
                             modelo: "",
+                            kilometros: "",
                             ubicacion: "",
                             descripcion: "",
                             img: "",
@@ -134,6 +137,14 @@ const CrearSubasta = () => {
                 name="modelo"
                 placeholder="Modelo"
                 value={formData.autos.modelo}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="number"
+                name="kilometros"
+                placeholder="Kilometros"
+                value={formData.autos.kilometros}
                 onChange={handleChange}
                 required
             />

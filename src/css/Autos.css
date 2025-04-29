@@ -19,6 +19,9 @@
   /* o lo que quieras */
   margin: 0 auto;
 }
+.slick-dots {
+  bottom: -10px;
+}
 
 .slick-slide img {
   border-radius: 10px;
@@ -80,6 +83,9 @@
   font-weight: 700;
   font-style: normal;
   font-size: x-large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .font-precio {
@@ -267,8 +273,16 @@ body.modal-open {
     grid-template-columns: auto;
   }
 
+  .borde{
+    padding-bottom: 40px;
+  }
+
   .box {
     width: 95%;
+  }
+  
+  .titulo{
+    height: 13%;
   }
 
 
