@@ -46,12 +46,11 @@ const Login = () => {
         title: "¡Inicio de sesión exitoso!",
         text: "Bienvenido a la subasta",
         icon: "success",
-        confirmButtonText: "Continuar",
-        customClass: {
-          confirmButton: "custom-swal-button" // Clase personalizada
-        }
+        showConfirmButton: false, // Oculta el botón
+        timer: 2000,              // Duración de 2 segundos (2000 ms)
+        timerProgressBar: true    // Opcional: muestra una barra de progreso del tiempo
       }).then(() => {
-        navigate('/subasta'); // Navegamos después de que el usuario cierre el alerta
+        navigate('/subasta'); // Navegamos después de que se cierre el alerta automáticamente
       });
     } catch (error) {
       if (error.response) {

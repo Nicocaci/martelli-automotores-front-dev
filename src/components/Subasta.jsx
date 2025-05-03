@@ -125,6 +125,13 @@ const Subasta = () => {
         };
     }, []);
 
+    
+    useEffect(() => {
+        if (selectedAutoImgs.length > 0) {
+            setImageModalOpen(true);
+        }
+    }, [selectedAutoImgs]);
+
     useEffect(() => {
         const token = Cookies.get("acces_token");
         if (!token) {
@@ -144,10 +151,10 @@ const Subasta = () => {
         }
     };
 
-    const openPeritajeModal = async (peritajes) => {
-        setSelectedAutoImgs(peritajes.map(foto => `${apiUrlUD}/uploads/${foto}`));
-        setImageModalOpen(true);
-    }
+    const openPeritajeModal = (peritajes) => {
+        const imgs = peritajes.map(foto => `${apiUrlUD}/uploads/${foto}`);
+        setSelectedAutoImgs(imgs);
+    };
 
     const closeModal = () => {
         setModalOpen(false);
