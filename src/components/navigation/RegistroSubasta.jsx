@@ -25,6 +25,7 @@ const RegistroSubasta = () => {
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedImageArray, setSelectedImageArray] = useState([]);
     const [subastaEditando, setSubastaEditando] = useState(null);
+    const [fullImage, setFullImage] = useState(null);
     const [formEditData, setFormEditData] = useState({
         nombre: '',
         modelo: '',
@@ -284,22 +285,35 @@ const RegistroSubasta = () => {
                 </div>
             )}
 
-            {imageModalOpen && selectedImageArray.length > 0 && (
-                <div className="modal-overlay-imagen" onClick={closeImageModal}>
-                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-                        <Slider {...sliderSettings}>
-                            {selectedImageArray.map((img, index) => (
-                                <div key={index}>
-                                    <Zoom>
-                                        <img src={img} alt={`Imagen ${index + 1}`} className="img-grande" />
-                                    </Zoom>
-                                </div>
-                            ))}
-                        </Slider>
-                        <button className="close-button" onClick={closeImageModal}>X</button>
-                    </div>
+{imageModalOpen && selectedImageArray.length > 0 && (
+    <div className="modal-overlay" onClick={closeImageModal}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="boton-cerrar" onClick={closeImageModal}>X</button>
+
+            {/* Galería de miniaturas */}
+            <div className="image-gallery">
+                {selectedImageArray.map((src, i) => (
+                    <img
+                        key={i}
+                        src={src}
+                        alt={`Thumbnail ${i + 1}`}
+                        className="thumbnail"
+                        onClick={() => setFullImage(src)}
+                    />
+                ))}
+            </div>
+
+            {/* Imagen ampliada con zoom */}
+            {fullImage && (
+                <div className="fullscreen-image" onClick={() => setFullImage(null)}>
+                    <Zoom>
+                        <img src={fullImage} alt="Vista completa" className="img-grande" />
+                    </Zoom>
                 </div>
             )}
+        </div>
+    </div>
+)}
 
             {subastaEditando && (
                 <div className="modal-overlay">

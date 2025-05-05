@@ -30,6 +30,7 @@ const Subasta = () => {
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedAutoImgs, setSelectedAutoImgs] = useState([]);
     const [mostrarModalCartel, setMostrarModalCartel] = useState(false);
+    const [fullImage, setFullImage] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -94,11 +95,11 @@ const Subasta = () => {
 
     useEffect(() => {
         if (!imageModalOpen) {
-          document.body.classList.remove("modal-open");
-          document.documentElement.style.scrollBehavior = "auto"; // por si hay animación
-          window.scrollTo({ top: 0 }); // vuelve a top, útil en mobile
+            document.body.classList.remove("modal-open");
+            document.documentElement.style.scrollBehavior = "auto"; // por si hay animación
+            window.scrollTo({ top: 0 }); // vuelve a top, útil en mobile
         }
-      }, [imageModalOpen]);
+    }, [imageModalOpen]);
 
     useEffect(() => {
         socket.on("subastaActualizada", (data) => {
@@ -125,7 +126,7 @@ const Subasta = () => {
         };
     }, []);
 
-    
+
     useEffect(() => {
         if (selectedAutoImgs.length > 0) {
             setImageModalOpen(true);
@@ -172,8 +173,8 @@ const Subasta = () => {
     };
 
     const closeImageModal = () => {
-            setSelectedAutoImgs([]);
-            setImageModalOpen(false);
+        setSelectedAutoImgs([]);
+        setImageModalOpen(false);
 
     };
 
@@ -210,7 +211,7 @@ const Subasta = () => {
                         )
                         .map((sub) => (
                             <div key={sub._id} className="borde">
-                                
+
                                 <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
                                     {sub.autos?.img?.map((foto, i) => (
                                         <div key={i}>
@@ -241,39 +242,43 @@ const Subasta = () => {
             {modalOpen && modalData && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <h2 className="titulo">{modalData.autos?.nombre}</h2>
+                        <button className="boton-cerrar" onClick={closeModal}>X</button>
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
                         <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
                         <p className="font-subasta"><strong>Kilómetros:</strong> {modalData.autos?.kilometros}KM</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
                         <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
                         <button onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>
-                        <button className="close-button" onClick={closeModal}>X</button>
+
                     </div>
                 </div>
             )}
 
-            {imageModalOpen && selectedAutoImgs.length > 0 && (
-                <div className="modal-overlay-imagen" onClick={closeImageModal}>
-                    <div className="modal-image-content" onClick={(e) => e.stopPropagation()}>
-                        <Slider dots={true} infinite={true} speed={500} slidesToShow={1} slidesToScroll={1}>
-                            {selectedAutoImgs.map((imgUrl, idx) => (
-                                <div key={idx}>
-                                    <Zoom>
-                                        <img
-                                            src={imgUrl}
-                                            alt={`Foto ampliada ${idx + 1}`}
-                                            className="img-grande"
-                                        />
-                                    </Zoom>
-                                </div>
+            {imageModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="boton-cerrar" onClick={() => setImageModalOpen(false)}>X</button>
+                        <div className="image-gallery">
+                            {selectedAutoImgs.map((src, i) => (
+                                <img
+                                    key={i}
+                                    src={src}
+                                    alt={`Imagen ${i}`}
+                                    className="thumbnail"
+                                    onClick={() => setFullImage(src)}
+                                />
                             ))}
+                        </div>
 
-                        </Slider>
-                        <button className="close-button" onClick={closeImageModal}>X</button>
+                        {fullImage && (
+                            <div className="fullscreen-image" onClick={() => setFullImage(null)}>
+                                <img src={fullImage} alt="Vista completa" />
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
+
 
         </div>
     );
