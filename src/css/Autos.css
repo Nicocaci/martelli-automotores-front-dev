@@ -133,16 +133,24 @@
 .boton-mas {
   width: 30px;
   height: 30px;
-  background-color: black;
+  background-color: #007bff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: x-large;
 }
 
+.boton-detalle {
+  background-color: #007bff;
+  color: white;
+  font-size:15px;
+}
 
-.btn-ofertar,
-.btn-detalle,
+.boton-peritaje{
+  background-color: #0b580b;
+  font-size: 20px;
+}
+
 .boton-cerrar {
   display: block;
   position: absolute;
@@ -161,16 +169,39 @@
 .btn-ofertar {
   background-color: #007bff;
   color: white;
+  font-size: 15px;
 }
 
 .btn-ofertar:hover {
   background-color: #0056b3;
 }
 
-.btn-detalle {
-  background-color: gray;
-  color: white;
+
+
+/* BOTONES SECCION REGISTRO */
+
+.botones-registro{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.botones-registro-subastadores{
+  border-radius: 100%;
+  width: 15%;
+  background-color:#0b580b ;
+}
+.botones-registro-eliminar{
+  border-radius: 100%;
+  width: 15%;
+  background-color: #ff0000;
+}
+.botones-registro-editar{
+  border-radius: 100%;
+  width: 15%;
+  background-color: #f58a27;
+}
+/* ---------------------------------------------------- */
 
 .btn-detalle:hover {
   background-color: #444;

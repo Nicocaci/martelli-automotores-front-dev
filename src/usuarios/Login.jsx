@@ -44,7 +44,7 @@ const Login = () => {
       console.log("Cookies actuales:", document.cookie); // 🔍
       Swal.fire({
         title: "¡Inicio de sesión exitoso!",
-        text: "Bienvenido a la subasta",
+        text: "Bienvenido a AutoSMart",
         icon: "success",
         showConfirmButton: false, // Oculta el botón
         timer: 2000,              // Duración de 2 segundos (2000 ms)

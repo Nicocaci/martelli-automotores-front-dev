@@ -231,7 +231,7 @@ const Subasta = () => {
                                 {/* <h4 className="font-precio">Precio más alto: ${highestBids[sub._id] || sub.precioInicial}</h4> */}
                                 <Cronometro subastaId={sub._id} />
                                 <PriceInput className="price" subastaId={sub._id} />
-                                <button className="button" onClick={() => openModal(sub._id)}>Ver detalle</button>
+                                <button className="boton-detalle" onClick={() => openModal(sub._id)}>Ver detalle</button>
                             </div>
                         ))
                 ) : (
@@ -245,10 +245,10 @@ const Subasta = () => {
                         <button className="boton-cerrar" onClick={closeModal}>X</button>
                         <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
                         <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
-                        <p className="font-subasta"><strong>Kilómetros:</strong> {modalData.autos?.kilometros}KM</p>
+                        <p className="font-subasta"><strong>Kilómetros:</strong> {modalData.autos?.kilometros.toLocaleString()}KM</p>
                         <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
                         <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
-                        <button onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>
+                        <button className="boton-peritaje" onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>
 
                     </div>
                 </div>

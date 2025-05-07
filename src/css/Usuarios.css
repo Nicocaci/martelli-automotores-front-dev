@@ -40,7 +40,7 @@
 .usuario-buttons {
     margin-top: 15px;
     display: flex;
-    gap: 10px;
+    gap: 10px;  
 }
 
 .btn-aprobar {
@@ -48,8 +48,8 @@
     color: white;
     border: none;
     padding: 8px 12px;
-    border-radius: 8px;
     cursor: pointer;
+    border-radius: 15%;
 }
 
 .btn-aprobar.desaprobar {
@@ -61,8 +61,8 @@
     color: white;
     border: none;
     padding: 8px 12px;
-    border-radius: 8px;
     cursor: pointer;
+    border-radius: 15%;
 }
 
 .btn-editar{
