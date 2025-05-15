@@ -21,7 +21,7 @@ const RegistroSubasta = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [modeloTerm, setModeloTerm] = useState("");
     const [ubicacionTerm, setUbicacionTerm] = useState("");
-    const [mostrarFinalizadas, setMostrarFinalizadas] = useState("todas"); // opciones: "todas", "finalizadas", "activas"
+    const [mostrarFinalizadas, setMostrarFinalizadas] = useState("activas"); // opciones: "todas", "finalizadas", "activas"
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedImageArray, setSelectedImageArray] = useState([]);
     const [subastaEditando, setSubastaEditando] = useState(null);
