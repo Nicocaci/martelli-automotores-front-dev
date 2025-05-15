@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Subasta from './components/Subasta';
@@ -10,10 +11,12 @@ import CrearSubata from './components/navigation/CrearSubata';
 import RegistroSubasta from './components/navigation/RegistroSubasta';
 import Usuarios from './components/navigation/Usuarios';
 
+import { showAppleInstallationGuide } from './utils/pwaHelper.js';
+
 const AppContent = () => {
   return (
     <div className='main'>
-      
+
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/login" element={<Login />} />
@@ -31,17 +34,24 @@ const AppContent = () => {
 };
 
 const App = () => {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js').catch(err => {
-        console.error("Error registrando service worker:", err);
+  useEffect(() => {
+    // Registrar el Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').catch(err => {
+          console.error("Error registrando service worker:", err);
+        });
       });
-    });
-  }
-  
+    }
+
+    // Mostrar guía si el dispositivo es Apple
+    showAppleInstallationGuide();
+  }, []);
+
+
   return (
     <BrowserRouter>
-      <NavBar/>
+      <NavBar />
       <AppContent />
     </BrowserRouter>
   );

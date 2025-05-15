@@ -30,9 +30,22 @@ const Subasta = () => {
     const [imageModalOpen, setImageModalOpen] = useState(false);
     const [selectedAutoImgs, setSelectedAutoImgs] = useState([]);
     const [mostrarModalCartel, setMostrarModalCartel] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
     const [fullImage, setFullImage] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+  // Guardar la posición de scroll actual
+    const saveScrollPosition = () => {
+        setScrollPosition(window.scrollY);
+    };
+
+    // Restaurar la posición de scroll guardada
+    const restoreScrollPosition = () => {
+        setTimeout(() => {
+            window.scrollTo(0, scrollPosition);
+        }, 0);
+    };
 
     useEffect(() => {
         const cartel = localStorage.getItem("cartel");
@@ -166,6 +179,7 @@ const Subasta = () => {
     if (error) return <p>{error}</p>;
 
     const openImageModal = (imgs) => {
+        saveScrollPosition();
         setSelectedAutoImgs(imgs.map(foto =>
             `${apiUrlUD}/uploads/${foto}`
         ));
@@ -175,7 +189,7 @@ const Subasta = () => {
     const closeImageModal = () => {
         setSelectedAutoImgs([]);
         setImageModalOpen(false);
-
+        restoreScrollPosition();
     };
 
     return (
@@ -257,7 +271,7 @@ const Subasta = () => {
             {imageModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
-                        <button className="boton-cerrar" onClick={() => setImageModalOpen(false)}>X</button>
+                        <button className="boton-cerrar" onClick={closeImageModal}>X</button>
                         <div className="image-gallery">
                             {selectedAutoImgs.map((src, i) => (
                                 <img
