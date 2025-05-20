@@ -44,22 +44,21 @@ const ZoomableImage = ({ src, alt }) => {
 
   // Actualiza los bounds cada vez que cambia el zoom
   useEffect(() => {
-    const unsubscribe = scale.onChange((s) => {
-      updateBounds(s);
-    });
-    updateBounds(scale.get()); // Inicial
-    return () => unsubscribe();
-  }, [scale]);
+    updateBounds(scale.get()); // Solo una vez, al montar
+  }, []);
+
 
   const bind = useGesture(
     {
       onPinch: ({ offset: [s] }) => {
         const clamped = Math.max(1, Math.min(4, s));
         api.start({ scale: clamped });
+        updateBounds(clamped);
       },
       onWheel: ({ offset: [, sy] }) => {
         const newScale = Math.max(1, Math.min(4, 1 + sy / 300));
         api.start({ scale: newScale });
+        updateBounds(newScale);
       },
       onDrag: ({ offset: [dx, dy] }) => {
         api.start({
