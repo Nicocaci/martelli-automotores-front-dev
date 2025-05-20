@@ -1,56 +1,48 @@
-import { useGesture } from '@use-gesture/react';
-import { useSpring, animated } from '@react-spring/web';
-import { useRef } from 'react';
+import React from "react";
+import { useSpring, animated } from "@react-spring/web";
+import { useGesture } from "@use-gesture/react";
 
-const ZoomableImage = ({ src }) => {
-  const domTarget = useRef(null);
-
-  const [{ scale, x, y }, api] = useSpring(() => ({
-    scale: 1,
+const ZoomableImage = ({ src, alt }) => {
+  const [{ x, y, scale }, api] = useSpring(() => ({
     x: 0,
     y: 0,
+    scale: 1,
   }));
 
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-  useGesture(
-    {
-      onPinch: ({ offset: [d], memo }) => {
-        const newScale = clamp(d, 1, 3); // 🔒 limita entre 1x y 3x
-        api.start({ scale: newScale });
-        return memo;
-      },
-      onWheel: ({ delta: [, dy] }) => {
-        api.start((prev) => {
-          const newScale = clamp(prev.scale.get() - dy * 0.001, 1, 3);
-          return { scale: newScale };
-        });
-      },
+  const bind = useGesture({
+    onPinch: ({ offset: [scaleValue] }) => {
+      api.start({ scale: scaleValue });
     },
-    {
-      target: domTarget,
-      eventOptions: { passive: false },
-      pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: false },
-    }
-  );
+    onDrag: ({ offset: [dx, dy] }) => {
+      api.start({ x: dx, y: dy });
+    },
+    onWheel: ({ offset: [, sy] }) => {
+      const newScale = Math.max(1, Math.min(4, 1 + sy / 300));
+      api.start({ scale: newScale });
+    },
+  }, {
+    pinch: { scaleBounds: { min: 1, max: 4 }, rubberband: true },
+    drag: { bounds: { left: -300, right: 300, top: -300, bottom: 300 }, rubberband: true },
+  });
 
   return (
-    <animated.div
-      ref={domTarget}
-      style={{
-        touchAction: 'none',
-        display: 'inline-block',
-        overflow: 'hidden',
-        transformOrigin: 'center',
-        scale,
-      }}
-    >
-      <img
+    <div style={{ touchAction: "none", overflow: "hidden" }}>
+      <animated.img
+        {...bind()}
         src={src}
-        alt="zoomable"
-        style={{ width: '100%', height: 'auto', pointerEvents: 'none' }}
+        alt={alt}
+        style={{
+          x,
+          y,
+          scale,
+          display: "block",
+          maxWidth: "100%",
+          margin: "0 auto",
+          cursor: "grab",
+        }}
       />
-    </animated.div>
+    </div>
   );
 };
+
 export default ZoomableImage;
