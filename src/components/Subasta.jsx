@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Slider from "react-slick";
 import Zoom from 'react-medium-image-zoom';
 import { useLocation } from "react-router-dom";
+import ZoomableImage from "./ZoomableImage.jsx";
 
 
 
@@ -35,7 +36,7 @@ const Subasta = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-  // Guardar la posición de scroll actual
+    // Guardar la posición de scroll actual
     const saveScrollPosition = () => {
         setScrollPosition(window.scrollY);
     };
@@ -286,9 +287,10 @@ const Subasta = () => {
 
                         {fullImage && (
                             <div className="fullscreen-image" onClick={() => setFullImage(null)}>
-                                <img src={fullImage} alt="Vista completa" />
+                                <ZoomableImage src={fullImage} alt="Vista completa" />
                             </div>
                         )}
+
                     </div>
                 </div>
             )}
