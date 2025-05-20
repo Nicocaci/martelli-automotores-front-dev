@@ -10,8 +10,8 @@ const ZoomableImage = ({ src, alt }) => {
   }));
 
   const bind = useGesture({
-    onPinch: ({ offset: [d] }) => {
-      api.start({ scale: d / 200 });
+    onPinch: ({ offset: [scaleValue] }) => {
+      api.start({ scale: scaleValue });
     },
     onDrag: ({ offset: [dx, dy] }) => {
       api.start({ x: dx, y: dy });
