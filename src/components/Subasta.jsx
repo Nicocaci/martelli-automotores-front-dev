@@ -111,7 +111,7 @@ const Subasta = () => {
         if (!imageModalOpen) {
             document.body.classList.remove("modal-open");
             document.documentElement.style.scrollBehavior = "auto"; // por si hay animación
-            window.scrollTo({ top: 0 }); // vuelve a top, útil en mobile
+            // window.scrollTo({ top: 0 }); // vuelve a top, útil en mobile
         }
     }, [imageModalOpen]);
 
@@ -175,6 +175,7 @@ const Subasta = () => {
         setModalOpen(false);
         setModalData(null);
     };
+    
 
     if (loading) return <p>Cargando autos...</p>;
     if (error) return <p>{error}</p>;
@@ -190,7 +191,6 @@ const Subasta = () => {
     const closeImageModal = () => {
         setSelectedAutoImgs([]);
         setImageModalOpen(false);
-        restoreScrollPosition();
     };
 
     return (
