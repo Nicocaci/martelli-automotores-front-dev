@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-const apiUrl = import.meta.env.VITE_API_URL; 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ const Login = () => {
   // VERIFICAMOS TOKEN
 
   useEffect(() => {
-    const token = Cookies.get("acces_token");
+    const token = Cookies.get('acces_token');
     if (token) {
       navigate('/subasta');
     }
