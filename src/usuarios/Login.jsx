@@ -19,7 +19,7 @@ const Login = () => {
   // VERIFICAMOS TOKEN
 
   useEffect(() => {
-    const token = Cookies.get('acces_token');
+    const token = Cookies.get('access_token');
     if (token) {
       navigate('/subasta');
     }
