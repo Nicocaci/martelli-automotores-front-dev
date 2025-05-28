@@ -40,29 +40,27 @@ const Cronometro = ({ subastaId }) => {
         return () => clearInterval(intervalo);
     }, [subastaId]);
 
-    const calcularTiempoRestante = (subasta) => {
-        const ahora = new Date().getTime();
-        const fin = new Date(subasta.fechaFin).getTime();
+const calcularTiempoRestante = (subasta) => {
+    const ahora = Date.now(); // actual en milisegundos UTC
+    const fin = new Date(subasta.fechaFin).getTime(); // también UTC
 
-        if (ahora >= fin) {
-            setTiempoRestante(null);
-            if (subasta.tiempoExtraRestante === null) {
-                axios.put(
-                    `${apiUrl}/subasta/${subastaId}/activar-tiempo-extra`
-                )
-                setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
-            }
-            return;
+    if (ahora >= fin) {
+        setTiempoRestante(null);
+        if (subasta.tiempoExtraRestante === null) {
+            axios.put(`${apiUrl}/subasta/${subastaId}/activar-tiempo-extra`);
+            setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
         }
+        return;
+    }
 
-        const tiempo = fin - ahora;
-        const dias = Math.floor(tiempo / (1000 * 60 * 60 * 24));
-        const horas = Math.floor((tiempo % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((tiempo % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((tiempo % (1000 * 60)) / 1000);
+    const tiempo = fin - ahora;
+    const dias = Math.floor(tiempo / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((tiempo % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((tiempo % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((tiempo % (1000 * 60)) / 1000);
 
-        setTiempoRestante({ dias, horas, minutos, segundos });
-    };
+    setTiempoRestante({ dias, horas, minutos, segundos });
+};
 
     useEffect(() => {
         if (tiempoExtra !== null && tiempoExtra > 0) {
