@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import socket from "../../utils/Socket.js";
-const apiUrl = import.meta.env.VITE_API_URL;  
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Cronometro = ({ subastaId }) => {
     const [subasta, setSubasta] = useState(null);
@@ -40,35 +40,42 @@ const Cronometro = ({ subastaId }) => {
         return () => clearInterval(intervalo);
     }, [subastaId]);
 
-const calcularTiempoRestante = (subasta) => {
-    const ahora = Date.now(); // tiempo actual (en milisegundos)
-    const fin = new Date(subasta.fechaFin).getTime(); // fecha de fin
-    const inicio = new Date(subasta.fechaInicio).getTime(); // fecha de inicio
+    const calcularTiempoRestante = (subasta) => {
+        const ahora = Date.now(); // tiempo actual (en milisegundos)
+        const fin = new Date(subasta.fechaFin).getTime(); // fecha de fin
+        const inicio = new Date(subasta.fechaInicio).getTime(); // fecha de inicio
 
-    // Si la subasta todavía no empezó, no muestres el cronómetro
-    if (ahora < inicio) {
-        setTiempoRestante(null);
-        return;
-    }
 
-    // Si ya terminó
-    if (ahora >= fin) {
-        setTiempoRestante(null);
-        if (subasta.tiempoExtraRestante === null) {
-            axios.put(`${apiUrl}/subasta/${subastaId}/activar-tiempo-extra`);
-            setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
+        // Verifica que se están calculando bien las fechas
+        console.log("Ahora:", new Date(ahora).toISOString());
+        console.log("Inicio:", new Date(inicio).toISOString());
+        console.log("Fin:", new Date(fin).toISOString());
+
+
+        // Si la subasta todavía no empezó, no muestres el cronómetro
+        if (ahora < inicio) {
+            setTiempoRestante(null);
+            return;
         }
-        return;
-    }
 
-    const tiempo = fin - ahora;
-    const dias = Math.floor(tiempo / (1000 * 60 * 60 * 24));
-    const horas = Math.floor((tiempo % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutos = Math.floor((tiempo % (1000 * 60 * 60)) / (1000 * 60));
-    const segundos = Math.floor((tiempo % (1000 * 60)) / 1000);
+        // Si ya terminó
+        if (ahora >= fin) {
+            setTiempoRestante(null);
+            if (subasta.tiempoExtraRestante === null) {
+                axios.put(`${apiUrl}/subasta/${subastaId}/activar-tiempo-extra`);
+                setTiempoExtra(60); // Inicia el tiempo extra en 60 segundos
+            }
+            return;
+        }
 
-    setTiempoRestante({ dias, horas, minutos, segundos });
-};
+        const tiempo = fin - ahora;
+        const dias = Math.floor(tiempo / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((tiempo % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((tiempo % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((tiempo % (1000 * 60)) / 1000);
+
+        setTiempoRestante({ dias, horas, minutos, segundos });
+    };
 
     useEffect(() => {
         if (tiempoExtra !== null && tiempoExtra > 0) {
@@ -97,9 +104,9 @@ const calcularTiempoRestante = (subasta) => {
         if (subastaFinalizada) {
             axios.put(
                 `${apiUrl}/subasta/finalizar/${subastaId}`
-                ,{
-                finalizada: true
-            });
+                , {
+                    finalizada: true
+                });
         }
     }, [subastaFinalizada, subastaId]);
 
@@ -110,7 +117,7 @@ const calcularTiempoRestante = (subasta) => {
                 setSubastaFinalizada(true);
             }
         });
-    
+
         return () => {
             socket.off("subastaFinalizada");
         };
