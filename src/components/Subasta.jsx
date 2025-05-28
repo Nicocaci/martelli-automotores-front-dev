@@ -148,7 +148,7 @@ const Subasta = () => {
     }, [selectedAutoImgs]);
 
     useEffect(() => {
-        const token = Cookies.get("access_token");
+        const token = Cookies.get('access_token');
         if (!token) {
             navigate("/login");
         }

@@ -16,7 +16,7 @@ const NavBar = () => {
 
     useEffect(() => {
         const checkToken = () => {
-            const token = Cookies.get('acces_token');
+            const token = Cookies.get('access_token');
             if (token) {
                 try {
                     const decoded = jwtDecode(token);

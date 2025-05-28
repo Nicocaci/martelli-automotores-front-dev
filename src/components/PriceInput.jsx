@@ -15,7 +15,7 @@ const PriceInput = ({ subastaId }) => {
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("acces_token");
+    const token = Cookies.get('access_token');
     if (token) {
       try {
         const decoded = jwtDecode(token);
