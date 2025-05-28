@@ -57,17 +57,20 @@ const CrearSubasta = () => {
                 formDataToSend.append("ubicacion", formData.autos.ubicacion);
                 formDataToSend.append("descripcion", formData.autos.descripcion);
 
-                // 🔥 Esta parte es la clave: recorrer el array de imágenes y agregarlas una por una
                 formData.autos.img.forEach((file) => {
-                    formDataToSend.append("img", file); // ¡el campo debe tener el mismo nombre que espera Multer!
+                    formDataToSend.append("img", file);
                 });
 
                 formData.autos.peritaje.forEach((file) => {
                     formDataToSend.append("peritaje", file);
                 });
-                formDataToSend.append("precioInicial", formData.precioInicial);
-                formDataToSend.append("fechaFin", formData.fechaFin);
 
+                formDataToSend.append("precioInicial", formData.precioInicial);
+
+                // ✅ Conversión de fechaFin a UTC antes de enviarla
+                const fechaLocal = new Date(formData.fechaFin);
+                const fechaUTC = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
+                formDataToSend.append("fechaFin", fechaUTC.toISOString());
 
                 try {
                     await axios.post(
@@ -75,7 +78,6 @@ const CrearSubasta = () => {
                         formDataToSend,
                         { headers: { "Content-Type": "multipart/form-data" } }
                     );
-
 
                     Swal.fire({
                         title: "Subasta creada",
@@ -111,7 +113,6 @@ const CrearSubasta = () => {
             }
         });
     };
-
 
     return (
         <form onSubmit={handleSubmit} className="FormSubasta">

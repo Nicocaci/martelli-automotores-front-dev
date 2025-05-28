@@ -3,7 +3,6 @@ import Ganador from '../Ganador.jsx';
 import Swal from 'sweetalert2';
 import Cronometro from './Cronometro.jsx';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import '../../css/CardSubasta.css';
 import Slider from 'react-slick';
 import '../../css/Autos.css';
