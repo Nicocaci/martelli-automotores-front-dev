@@ -41,7 +41,7 @@ const Cronometro = ({ subastaId }) => {
     }, [subastaId]);
 
     const calcularTiempoRestante = (subasta) => {
-        const ahora = Date.now(); // tiempo actual (en milisegundos)
+        const ahora = Date.now() - 3 * 60 * 60 * 1000; // Resta 3 horas
         const fin = new Date(subasta.fechaFin).getTime(); // fecha de fin
         const inicio = new Date(subasta.fechaInicio).getTime(); // fecha de inicio
 
