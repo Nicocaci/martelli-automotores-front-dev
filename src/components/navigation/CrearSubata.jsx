@@ -36,83 +36,88 @@ const CrearSubasta = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        Swal.fire({
-            title: "¿Confirmar subasta?",
-            text: "¿Estás seguro de que deseas crear esta subasta?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Sí, crear",
-            cancelButtonText: "Cancelar",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                const formDataToSend = new FormData();
+    Swal.fire({
+        title: "¿Confirmar subasta?",
+        text: "¿Estás seguro de que deseas crear esta subasta?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, crear",
+        cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const formDataToSend = new FormData();
 
-                formDataToSend.append("nombre", formData.autos.nombre);
-                formDataToSend.append("motor", formData.autos.motor);
-                formDataToSend.append("modelo", formData.autos.modelo);
-                formDataToSend.append("kilometros", formData.autos.kilometros);
-                formDataToSend.append("ubicacion", formData.autos.ubicacion);
-                formDataToSend.append("descripcion", formData.autos.descripcion);
+            formDataToSend.append("nombre", formData.autos.nombre);
+            formDataToSend.append("motor", formData.autos.motor);
+            formDataToSend.append("modelo", formData.autos.modelo);
+            formDataToSend.append("kilometros", formData.autos.kilometros);
+            formDataToSend.append("ubicacion", formData.autos.ubicacion);
+            formDataToSend.append("descripcion", formData.autos.descripcion);
 
-                formData.autos.img.forEach((file) => {
-                    formDataToSend.append("img", file);
+            formData.autos.img.forEach((file) => {
+                formDataToSend.append("img", file);
+            });
+
+            formData.autos.peritaje.forEach((file) => {
+                formDataToSend.append("peritaje", file);
+            });
+
+            formDataToSend.append("precioInicial", formData.precioInicial);
+
+            // ✅ Conversión segura de fechaFin a UTC
+            const [fechaStr, horaStr] = formData.fechaFin.split("T");
+            const [anio, mes, dia] = fechaStr.split("-");
+            const [hora, minuto] = horaStr.split(":");
+
+            const fechaLocal = new Date(anio, mes - 1, dia, hora, minuto);
+            const fechaUTC = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
+
+            formDataToSend.append("fechaFin", fechaUTC.toISOString());
+
+            try {
+                await axios.post(
+                    `${apiUrl}/subasta`,
+                    formDataToSend,
+                    { headers: { "Content-Type": "multipart/form-data" } }
+                );
+
+                Swal.fire({
+                    title: "Subasta creada",
+                    text: "¡Tu subasta ha sido publicada con éxito!",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false,
                 });
 
-                formData.autos.peritaje.forEach((file) => {
-                    formDataToSend.append("peritaje", file);
+                setFormData({
+                    autos: {
+                        nombre: "",
+                        motor: "",
+                        modelo: "",
+                        kilometros: "",
+                        ubicacion: "",
+                        descripcion: "",
+                        img: "",
+                        peritaje: "",
+                    },
+                    precioInicial: "",
+                    fechaFin: "",
                 });
-
-                formDataToSend.append("precioInicial", formData.precioInicial);
-
-                // ✅ Conversión de fechaFin a UTC antes de enviarla
-                const fechaLocal = new Date(formData.fechaFin);
-                const fechaUTC = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
-                formDataToSend.append("fechaFin", fechaUTC.toISOString());
-
-                try {
-                    await axios.post(
-                        `${apiUrl}/subasta`,
-                        formDataToSend,
-                        { headers: { "Content-Type": "multipart/form-data" } }
-                    );
-
-                    Swal.fire({
-                        title: "Subasta creada",
-                        text: "¡Tu subasta ha sido publicada con éxito!",
-                        icon: "success",
-                        timer: 2000,
-                        showConfirmButton: false,
-                    });
-
-                    setFormData({
-                        autos: {
-                            nombre: "",
-                            motor: "",
-                            modelo: "",
-                            kilometros: "",
-                            ubicacion: "",
-                            descripcion: "",
-                            img: "",
-                            peritaje: "",
-                        },
-                        precioInicial: "",
-                        fechaFin: "",
-                    });
-                } catch (error) {
-                    console.error("Error:", error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "Hubo un problema al crear la subasta",
-                        icon: "error",
-                        confirmButtonText: "OK",
-                    });
-                }
+            } catch (error) {
+                console.error("Error:", error);
+                Swal.fire({
+                    title: "Error",
+                    text: "Hubo un problema al crear la subasta",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
             }
-        });
-    };
+        }
+    });
+};
 
     return (
         <form onSubmit={handleSubmit} className="FormSubasta">
