@@ -41,9 +41,17 @@ const Cronometro = ({ subastaId }) => {
     }, [subastaId]);
 
 const calcularTiempoRestante = (subasta) => {
-    const ahora = Date.now(); // actual en milisegundos UTC
-    const fin = new Date(subasta.fechaFin).getTime(); // también UTC
+    const ahora = Date.now(); // tiempo actual (en milisegundos)
+    const fin = new Date(subasta.fechaFin).getTime(); // fecha de fin
+    const inicio = new Date(subasta.fechaInicio).getTime(); // fecha de inicio
 
+    // Si la subasta todavía no empezó, no muestres el cronómetro
+    if (ahora < inicio) {
+        setTiempoRestante(null);
+        return;
+    }
+
+    // Si ya terminó
     if (ahora >= fin) {
         setTiempoRestante(null);
         if (subasta.tiempoExtraRestante === null) {
