@@ -30,15 +30,25 @@ const Perfil = () => {
   const [peritajeModalOpen, setPeritajeModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = Cookies.get("acces_token");
-    if (!token) {
-      navigate('/login');
-    } else {
-      const decoded = jwtDecode(token);
-      setUsuario(decoded._id);
-    }
-  }, [navigate]);
+useEffect(() => {
+  const token = Cookies.get("access_token");
+  if (!token) {
+    console.log("🚫 No hay token, redirigiendo al login");
+    navigate('/login');
+    return;
+  }
+
+  try {
+    const decoded = jwtDecode(token);
+    console.log("🧩 Token decodificado:", decoded);
+    setUsuario(decoded._id || decoded.id || decoded.userId);
+  } catch (err) {
+    console.error("❌ Error al decodificar token:", err);
+    Cookies.remove("acces_token");
+    navigate('/login');
+  }
+}, [navigate]);
+
 
   useEffect(() => {
     if (!usuario) return;

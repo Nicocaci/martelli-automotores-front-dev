@@ -45,13 +45,6 @@ const Cronometro = ({ subastaId }) => {
         const fin = new Date(subasta.fechaFin).getTime(); // fecha de fin
         const inicio = new Date(subasta.fechaInicio).getTime(); // fecha de inicio
 
-
-        // Verifica que se están calculando bien las fechas
-        console.log("Ahora:", new Date(ahora).toISOString());
-        console.log("Inicio:", new Date(inicio).toISOString());
-        console.log("Fin:", new Date(fin).toISOString());
-
-
         // Si la subasta todavía no empezó, no muestres el cronómetro
         if (ahora < inicio) {
             setTiempoRestante(null);
