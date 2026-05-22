@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Slider from 'react-slick';
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 import socket from "../utils/Socket";
 socket.on("connect", () => {
   console.log("Socket conectado:", socket.id);
@@ -30,37 +28,39 @@ const Perfil = () => {
   const [peritajeModalOpen, setPeritajeModalOpen] = useState(false);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const token = Cookies.get("access_token");
-  if (!token) {
-    console.log("🚫 No hay token, redirigiendo al login");
-    navigate('/login');
-    return;
-  }
+  useEffect(() => {
+    const verificarSesion = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/usuarios/verify`, {
+          withCredentials: true,
+        });
+        setUsuario(response.data.user?._id); // ← agregá esta línea
+      } catch (error) {
+        navigate("/login");
+      }
+    };
 
-  try {
-    const decoded = jwtDecode(token);
-    console.log("🧩 Token decodificado:", decoded);
-    setUsuario(decoded._id || decoded.id || decoded.userId);
-  } catch (err) {
-    console.error("❌ Error al decodificar token:", err);
-    Cookies.remove("acces_token");
-    navigate('/login');
-  }
-}, [navigate]);
-
+    verificarSesion();
+  }, [navigate]);
 
   useEffect(() => {
     if (!usuario) return;
 
     const handleNuevaOferta = (data) => {
-      console.log("Evento recibido en frontend:", data, "Usuario local:", usuario);
+      console.log(
+        "Evento recibido en frontend:",
+        data,
+        "Usuario local:",
+        usuario,
+      );
       if (data.usuarioId?.toString() === usuario?.toString()) {
         console.log("🔁 El usuario coincide, actualizando info...");
         axios
           .get(`${apiUrl}/usuarios/${usuario}`)
           .then((res) => setDataUs(res.data))
-          .catch((err) => console.error("Error al actualizar ofertas del perfil:", err));
+          .catch((err) =>
+            console.error("Error al actualizar ofertas del perfil:", err),
+          );
       }
     };
 
@@ -71,14 +71,11 @@ useEffect(() => {
     };
   }, [usuario]);
 
-
   useEffect(() => {
     if (usuario) {
       const fetchUsuario = async () => {
         try {
-          const response = await axios.get(
-            `${apiUrl}/usuarios/${usuario}`
-          );
+          const response = await axios.get(`${apiUrl}/usuarios/${usuario}`);
           setDataUs(response.data);
         } catch (error) {
           console.error("Error al obtener los usuarios:", error);
@@ -90,9 +87,7 @@ useEffect(() => {
 
   const openModal = async (subastaId) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}/subasta/${subastaId}`
-      );
+      const response = await axios.get(`${apiUrl}/subasta/${subastaId}`);
       setModalData(response.data);
       setModalOpen(true);
     } catch (error) {
@@ -116,11 +111,11 @@ useEffect(() => {
   };
 
   const openPeritajeModal = (peritajes) => {
-    const imgs = peritajes.map(foto => `${apiUrlUD}/uploads/${foto}`);
+    const imgs = peritajes.map((foto) => `${apiUrlUD}/uploads/${foto}`);
     setSelectedAutoImgs(imgs);
     setPeritajeModalOpen(true);
   };
-  
+
   const closePeritajeModal = () => {
     setSelectedAutoImgs([]);
     setPeritajeModalOpen(false);
@@ -139,18 +134,28 @@ useEffect(() => {
       {dataUs ? (
         <>
           {/* Sección de información del usuario */}
-          <div className='box'>
-            <h1 className='titulo-admin'>Perfil</h1>
-            <p className='font-subasta'><strong>Agencia:</strong> {dataUs.agencia}</p>
-            <p className='font-subasta'><strong>DNI:</strong> {dataUs.dni}</p>
-            <p className='font-subasta'><strong>Email:</strong> {dataUs.email}</p>
-            <p className='font-subasta'><strong>Dirección:</strong> {dataUs.direccion}</p>
-            <p className='font-subasta'><strong>Teléfono:</strong> {dataUs.telefono}</p>
+          <div className="box">
+            <h1 className="titulo-admin">Perfil</h1>
+            <p className="font-subasta">
+              <strong>Agencia:</strong> {dataUs.agencia}
+            </p>
+            <p className="font-subasta">
+              <strong>DNI:</strong> {dataUs.dni}
+            </p>
+            <p className="font-subasta">
+              <strong>Email:</strong> {dataUs.email}
+            </p>
+            <p className="font-subasta">
+              <strong>Dirección:</strong> {dataUs.direccion}
+            </p>
+            <p className="font-subasta">
+              <strong>Teléfono:</strong> {dataUs.telefono}
+            </p>
           </div>
 
           {/* Sección de ofertas hechas */}
           <div className="box">
-            <h1 className='titulo-admin'>Ofertas Hechas</h1>
+            <h1 className="titulo-admin">Ofertas Hechas</h1>
             <input
               type="text"
               placeholder="Buscar por nombre..."
@@ -164,7 +169,7 @@ useEffect(() => {
                   .filter((oferta) =>
                     oferta.subasta?.autos?.nombre
                       ?.toLowerCase()
-                      .includes(searchTerm.toLowerCase())
+                      .includes(searchTerm.toLowerCase()),
                   )
                   .map((oferta, index) => (
                     <div className="borde" key={index}>
@@ -177,31 +182,53 @@ useEffect(() => {
                                   src={`${apiUrlUD}/uploads/${foto}`}
                                   alt={`Foto ${i + 1} de ${oferta.subasta.autos?.nombre}`}
                                   className="img-card"
-                                  onClick={() => openImageModal(oferta.subasta.autos?.img)}
-                                  style={{ cursor: 'pointer' }}
+                                  onClick={() =>
+                                    openImageModal(oferta.subasta.autos?.img)
+                                  }
+                                  style={{ cursor: "pointer" }}
                                 />
                               </div>
                             ))}
                           </Slider>
                           <div className="oferta-content">
                             <h3>{oferta.subasta.autos.nombre}</h3>
-                            <p className='font-subasta'><strong>Monto de oferta: ${oferta.monto.toLocaleString()}</strong></p>
-                            <button className='boton-detalle' onClick={() => openModal(oferta.subasta._id)}>Ver Detalle</button>
+                            <p className="font-subasta">
+                              <strong>
+                                Monto de oferta: $
+                                {oferta.monto.toLocaleString()}
+                              </strong>
+                            </p>
+                            <button
+                              className="boton-detalle"
+                              onClick={() => openModal(oferta.subasta._id)}
+                            >
+                              Ver Detalle
+                            </button>
                             {(() => {
-                              const ofertadores = oferta.subasta.ofertadores || [];
-                              const maxOferta = ofertadores.reduce((max, curr) =>
-                                curr.monto > max.monto ? curr : max,
-                                ofertadores[0] || {}
+                              const ofertadores =
+                                oferta.subasta.ofertadores || [];
+                              const maxOferta = ofertadores.reduce(
+                                (max, curr) =>
+                                  curr.monto > max.monto ? curr : max,
+                                ofertadores[0] || {},
                               );
 
                               if (!maxOferta.usuario) {
-                                return <p className="font-subasta text-gray-500">No hay ofertas aún.</p>;
+                                return (
+                                  <p className="font-subasta text-gray-500">
+                                    No hay ofertas aún.
+                                  </p>
+                                );
                               }
 
                               return maxOferta.usuario === usuario ? (
-                                <p className="font-subasta text-green-600 font-bold">✅ ¡Tu oferta fué la mas alta!</p>
+                                <p className="font-subasta text-green-600 font-bold">
+                                  ✅ ¡Tu oferta fué la mas alta!
+                                </p>
                               ) : (
-                                <p className="font-subasta text-red-600 font-semibold">❌ Tu oferta fue superada.</p>
+                                <p className="font-subasta text-red-600 font-semibold">
+                                  ❌ Tu oferta fue superada.
+                                </p>
                               );
                             })()}
                           </div>
@@ -224,7 +251,9 @@ useEffect(() => {
       {imageModalOpen && selectedImages.length > 0 && (
         <div className="modal-overlay" onClick={closeImageModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="boton-cerrar" onClick={closeImageModal}>X</button>
+            <button className="boton-cerrar" onClick={closeImageModal}>
+              X
+            </button>
             <div className="image-gallery">
               {selectedImages.map((src, i) => (
                 <img
@@ -234,13 +263,19 @@ useEffect(() => {
                   className="thumbnail"
                   onClick={() => setFullImage(`${apiUrlUD}/uploads/${src}`)}
                 />
-
               ))}
             </div>
             {fullImage && (
-              <div className="fullscreen-image" onClick={() => setFullImage(null)}>
+              <div
+                className="fullscreen-image"
+                onClick={() => setFullImage(null)}
+              >
                 <Zoom>
-                  <img src={fullImage} alt="Vista completa" className="img-grande" />
+                  <img
+                    src={fullImage}
+                    alt="Vista completa"
+                    className="img-grande"
+                  />
                 </Zoom>
               </div>
             )}
@@ -251,14 +286,31 @@ useEffect(() => {
       {modalOpen && modalData && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button className="boton-cerrar" onClick={closeModal}>X</button>
-            <p className="font-subasta"><strong>Motor:</strong> {modalData.autos?.motor}</p>
-            <p className="font-subasta"><strong>Modelo:</strong> {modalData.autos?.modelo}</p>
-            <p className="font-subasta"><strong>Kilómetros:</strong> {modalData.autos?.kilometros.toLocaleString()}KM</p>
-            <p className="font-subasta"><strong>Ubicación:</strong> {modalData.autos?.ubicacion}</p>
-            <p className="font-subasta"><strong>Descripcion:</strong> {modalData.autos?.descripcion}</p>
-            <button className="boton-peritaje" onClick={() => openPeritajeModal(modalData.autos?.peritaje)}>Peritaje</button>
-
+            <button className="boton-cerrar" onClick={closeModal}>
+              X
+            </button>
+            <p className="font-subasta">
+              <strong>Motor:</strong> {modalData.autos?.motor}
+            </p>
+            <p className="font-subasta">
+              <strong>Modelo:</strong> {modalData.autos?.modelo}
+            </p>
+            <p className="font-subasta">
+              <strong>Kilómetros:</strong>{" "}
+              {modalData.autos?.kilometros.toLocaleString()}KM
+            </p>
+            <p className="font-subasta">
+              <strong>Ubicación:</strong> {modalData.autos?.ubicacion}
+            </p>
+            <p className="font-subasta">
+              <strong>Descripcion:</strong> {modalData.autos?.descripcion}
+            </p>
+            <button
+              className="boton-peritaje"
+              onClick={() => openPeritajeModal(modalData.autos?.peritaje)}
+            >
+              Peritaje
+            </button>
           </div>
         </div>
       )}
@@ -266,7 +318,9 @@ useEffect(() => {
       {peritajeModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <button className="boton-cerrar" onClick={closePeritajeModal}>X</button>
+            <button className="boton-cerrar" onClick={closePeritajeModal}>
+              X
+            </button>
             <div className="image-gallery">
               {selectedAutoImgs.map((src, i) => (
                 <img
@@ -280,17 +334,18 @@ useEffect(() => {
             </div>
 
             {fullImage && (
-              <div className="fullscreen-image" onClick={() => setFullImage(null)}>
+              <div
+                className="fullscreen-image"
+                onClick={() => setFullImage(null)}
+              >
                 <img src={fullImage} alt="Vista completa" />
               </div>
             )}
           </div>
         </div>
       )}
-
     </div>
   );
 };
 
 export default Perfil;
-

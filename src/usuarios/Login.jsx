@@ -31,6 +31,8 @@ const Login = () => {
 
     verificarSesion();
   }, [navigate]);
+  
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
