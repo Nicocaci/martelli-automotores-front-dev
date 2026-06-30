@@ -67,15 +67,8 @@ const handleSubmit = async (e) => {
 
             formDataToSend.append("precioInicial", formData.precioInicial);
 
-            // ✅ Conversión segura de fechaFin a UTC
-            const [fechaStr, horaStr] = formData.fechaFin.split("T");
-            const [anio, mes, dia] = fechaStr.split("-");
-            const [hora, minuto] = horaStr.split(":");
-
-            const fechaLocal = new Date(anio, mes - 1, dia, hora, minuto);
-            const fechaUTC = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
-
-            formDataToSend.append("fechaFin", fechaUTC.toISOString());
+            const fechaLocal = new Date(formData.fechaFin);
+            formDataToSend.append("fechaFin", fechaLocal.toISOString());
 
             try {
                 await axios.post(

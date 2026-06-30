@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
-import Cookies from "js-cookie";
 import axios from "axios";
 import socket from "../utils/Socket";
 import "../css/Autos.css";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const PriceInput = ({ subastaId }) => {
-  const [price, setPrice] = useState(10000);
+  const [price, setPrice] = useState(50000);
   const [highestBid, setHighestBid] = useState(0);
   const [highestBidder, setHighestBidder] = useState(null);
   const [message, setMessage] = useState("");
@@ -15,15 +13,19 @@ const PriceInput = ({ subastaId }) => {
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get('access_token');
-    if (token) {
+    const obtenerUsuario = async () => {
       try {
-        const decoded = jwtDecode(token);
-        setUserId(decoded._id);
+        const response = await axios.get(`${apiUrl}/usuarios/verify`, {
+          withCredentials: true,
+        });
+        setUserId(response.data.user?._id || null);
       } catch (error) {
-        console.error("Error al decodificar el token:", error);
+        console.error("Error al verificar la sesión del usuario:", error);
+        setUserId(null);
       }
-    }
+    };
+
+    obtenerUsuario();
 
     const fetchHighestBid = async () => {
       try {
@@ -73,8 +75,8 @@ const PriceInput = ({ subastaId }) => {
     }
   }, [message]);
 
-  const handleIncrease = () => setPrice((prev) => prev + 10000);
-  const handleDecrease = () => setPrice((prev) => Math.max(0, prev - 10000));
+  const handleIncrease = () => setPrice((prev) => prev + 50000);
+  const handleDecrease = () => setPrice((prev) => Math.max(0, prev - 50000));
 
   const handleChange = (e) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, "");
@@ -125,7 +127,7 @@ const PriceInput = ({ subastaId }) => {
         { headers: { "Content-Type": "application/json" } }
       );
       setMessage(" ✅ Oferta enviada con éxito.");
-      setPrice(10000); // resetea el input después de ofertar
+      setPrice(50000); // resetea el input después de ofertar
     } catch (error) {
       console.error("Error al ofertar:", error);
       setMessage("❌ Error al enviar la oferta.");

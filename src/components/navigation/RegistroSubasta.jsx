@@ -101,6 +101,26 @@ const RegistroSubasta = () => {
         setImageModalOpen(false);
     };
 
+    const convertirFechaLocalAISO = (valor) => {
+        if (!valor) return null;
+
+        const fechaLocal = new Date(valor);
+        return fechaLocal.toISOString();
+    };
+
+    const formatearFechaParaInput = (valor) => {
+        if (!valor) return "";
+
+        const fecha = new Date(valor);
+        const anio = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        const horas = String(fecha.getHours()).padStart(2, "0");
+        const minutos = String(fecha.getMinutes()).padStart(2, "0");
+
+        return `${anio}-${mes}-${dia}T${horas}:${minutos}`;
+    };
+
     const handleEditClick = (subasta) => {
         if (subasta.finalizada) {
             Swal.fire("Subasta finalizada", "No se puede editar una subasta ya finalizada.", "warning");
@@ -115,7 +135,7 @@ const RegistroSubasta = () => {
             ubicacion: subasta.autos.ubicacion,
             descripcion: subasta.autos.descripcion,
             precioInicial: subasta.precioInicial,
-            fechaFin: subasta.fechaFin.slice(0, 16), // Para input type="datetime-local"
+            fechaFin: formatearFechaParaInput(subasta.fechaFin),
         });
     };
 
@@ -137,7 +157,7 @@ const RegistroSubasta = () => {
                     img: subastaEditando.autos.img
                 },
                 precioInicial: parseFloat(formEditData.precioInicial),
-                fechaFin: new Date(formEditData.fechaFin)
+                fechaFin: convertirFechaLocalAISO(formEditData.fechaFin)
             };
 
             await axios.put(`${apiUrl}/subasta/${subastaEditando._id}`, updatedData);
