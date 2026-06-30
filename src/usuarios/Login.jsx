@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("savedEmail") || "");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [showInstallButton, setShowInstallButton] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -50,6 +52,8 @@ const Login = () => {
           withCredentials: true,
         },
       );
+
+      localStorage.setItem("savedEmail", normalizedEmail);
 
       Swal.fire({
         title: "¡Inicio de sesión exitoso!",
@@ -128,12 +132,22 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <label htmlFor="">Contraseña:</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            {showPassword ? <IoEyeOffSharp /> : <IoEyeSharp />}
+          </button>
+        </div>
         <button className="" type="submit">
           Iniciar sesión
         </button>

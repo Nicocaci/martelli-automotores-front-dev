@@ -5,7 +5,7 @@ import "../css/Autos.css";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const PriceInput = ({ subastaId }) => {
-  const [price, setPrice] = useState(50000);
+  const [price, setPrice] = useState(0);
   const [highestBid, setHighestBid] = useState(0);
   const [highestBidder, setHighestBidder] = useState(null);
   const [message, setMessage] = useState("");
@@ -30,20 +30,19 @@ const PriceInput = ({ subastaId }) => {
     const fetchHighestBid = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}/subasta/${subastaId}`)
-          ;
+          `${apiUrl}/subasta/${subastaId}`);
         if (response.data) {
           const { ofertadores, precioInicial, finalizada } = response.data;
-          setIsFinished(finalizada); 
+          setIsFinished(finalizada);
           if (ofertadores.length > 0) {
             const highestOffer = ofertadores.reduce((max, o) => (o.monto > max.monto ? o : max), ofertadores[0]);
             setHighestBid(highestOffer.monto);
             setHighestBidder(highestOffer.usuario);
-
+            setPrice((prevPrice) => Math.max(prevPrice, highestOffer.monto));
           } else {
             setHighestBid(precioInicial);
             setHighestBidder(null);
-
+            setPrice((prevPrice) => Math.max(prevPrice, precioInicial));
           }
         }
       } catch (error) {
@@ -55,7 +54,10 @@ const PriceInput = ({ subastaId }) => {
 
     const handleSubastaActualizada = (data) => {
       if (data.subastaId === subastaId) {
-        if (data.highestBid) setHighestBid(data.highestBid);
+        if (data.highestBid) {
+          setHighestBid(data.highestBid);
+          setPrice((prevPrice) => Math.max(prevPrice, data.highestBid));
+        }
         if (data.highestBidder) setHighestBidder(data.highestBidder);
         if (typeof data.finalizada !== "undefined") setIsFinished(data.finalizada);
       }
@@ -108,9 +110,9 @@ const PriceInput = ({ subastaId }) => {
       return;
     }
 
-    const newOffer = highestBid + price;
+    const newOffer = price;
 
-    if (newOffer === highestBid) {
+    if (newOffer <= highestBid) {
       setMessage("⚠️ La oferta debe ser mayor al monto actual.");
       return;
     }
@@ -127,7 +129,7 @@ const PriceInput = ({ subastaId }) => {
         { headers: { "Content-Type": "application/json" } }
       );
       setMessage(" ✅ Oferta enviada con éxito.");
-      setPrice(50000); // resetea el input después de ofertar
+      setPrice(newOffer + 50000);
     } catch (error) {
       console.error("Error al ofertar:", error);
       setMessage("❌ Error al enviar la oferta.");
@@ -161,9 +163,6 @@ const PriceInput = ({ subastaId }) => {
         />
         <button onClick={handleIncrease} className="boton-mas">+</button>
       </div>
-      <p className="font-subasta">
-        Ofertar en: <span className="font-bold text-blue-600">${formatPrice(highestBid + price)}</span>
-      </p>
       <div className="flex gap-4">
         <button onClick={handleSubmit} className="btn-ofertar">Ofertar</button>
       </div>
